@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html class="dark" lang="en" style="scroll-behavior: smooth;">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AEROCREST 2026 | Mission Control</title>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- GSAP for Cinematic Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+<!-- FONT: ROBOTO -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+darkMode: "class",
+theme: {
+extend: {
+colors: {
+"primary": "#c41e3a",
+"primary-dark": "#8b1111",
+"accent-mars": "#ff4500",
+"accent-gold": "#ff8c00",
+"background-dark": "#1a0500",
+},
+fontFamily: {
+"display": ["Roboto", "sans-serif"],
+"orbitron": ["Roboto", "sans-serif"],
+"sans": ["Roboto", "sans-serif"],
+},
+animation: {
+'float': 'float 6s ease-in-out infinite',
+'scanline': 'scanline 8s linear infinite',
+'glow-node': 'glowNode 2s ease-in-out infinite',
+'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+},
+keyframes: {
+float: {
+'0%, 100%': { transform: 'translateY(0px)' },
+'50%': { transform: 'translateY(-20px)' },
+},
+glowNode: {
+'0%, 100%': { boxShadow: '0 0 5px #c41e3a, 0 0 10px #c41e3a' },
+'50%': { boxShadow: '0 0 20px #ff4500, 0 0 40px #ff4500' },
+}
+}
+},
+},
+}
+</script>
+<style>
+body {
+font-family: 'Roboto', sans-serif;
+background-color: #1a0500;
+color: #ffffff;
+overflow-x: hidden;
+position: relative;
+}
+
+/* --- VIDEO & OVERLAY STYLES --- */
+#video-background-layer {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+z-index: -50;
+overflow: hidden;
+}
+#bg-video {
+position: absolute;
+top: 50%; left: 50%;
+min-width: 100%; min-height: 100%;
+width: auto; height: auto;
+transform: translate(-50%, -50%);
+object-fit: cover;
+opacity: 0.6;
+}
+.cinematic-overlay {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: linear-gradient(180deg,
+rgba(26, 5, 0, 0.85) 0%,
+rgba(26, 5, 0, 0.4) 40%,
+rgba(26, 5, 0, 0.7) 80%,
+rgba(26, 5, 0, 1) 100%
+);
+z-index: -40;
+pointer-events: none;
+backdrop-filter: blur(1px);
+}
+.scanlines {
+position: fixed; top: 0; left: 0; w: 100%; h: 100%;
+background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+background-size: 100% 4px;
+z-index: -30;
+opacity: 0.3;
+pointer-events: none;
+}
+
+/* --- EXISTING STYLES --- */
+.mars-hud-bg {
+background: radial-gradient(circle at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 80%);
+}
+.glass-panel {
+backdrop-filter: blur(16px);
+border: 1px solid rgba(255, 69, 0, 0.2);
+background: rgba(45, 10, 5, 0.4);
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+.glow-text {
+text-shadow: 0 0 20px rgba(196, 30, 58, 0.8), 0 0 40px rgba(255, 69, 0, 0.4);
+}
+
+/* VERTICAL TIMELINE STYLES */
+.timeline-container { position: relative; padding: 40px 0; }
+.timeline-line {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+width: 1px;
+height: 0%;
+background: rgba(255, 69, 0, 0.5);
+box-shadow: 0 0 10px #ff4500;
+}
+.timeline-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+margin-bottom: 80px;
+opacity: 0;
+}
+.timeline-content { width: 42%; }
+.timeline-node {
+position: absolute;
+left: 50%; transform: translateX(-50%) scale(0);
+width: 32px; height: 32px;
+background: #1a0500; border: 3px solid #c41e3a;
+border-radius: 50%; z-index: 10;
+display: flex; align-items: center; justify-content: center;
+}
+.node-dot { width: 8px; height: 8px; background: white; border-radius: 50%; }
+
+/* REWARDS FAN EFFECT */
+.fan-card {
+transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s;
+}
+.fan-container:hover .card-left { transform: rotate(-15deg) translateX(-180px) scale(0.9); }
+.fan-container:hover .card-right { transform: rotate(15deg) translateX(180px) scale(0.9); }
+.fan-container:hover .card-center { transform: translateY(-20px) scale(1.05); z-index: 50; }
+
+@media (max-width: 768px) {
+.timeline-line { left: 20px; }
+.timeline-node { left: 20px; transform: none; }
+.timeline-content { width: 85%; margin-left: 50px; text-align: left !important; }
+.timeline-item { justify-content: flex-start; }
+.fan-container:hover .card-left, .fan-container:hover .card-right { transform: none; }
+}
+
+/* --- ANIMATION UTILITIES --- */
+.char-reveal { display: inline-block; opacity: 0; }
+.cursor-trail {
+position: fixed;
+width: 8px; height: 8px;
+background: #ff4500;
+border-radius: 50%;
+pointer-events: none;
+z-index: 9999;
+box-shadow: 0 0 10px #ff4500, 0 0 20px #c41e3a;
+transition: opacity 0.3s;
+}
+</style>
+</head>
+<body class="text-slate-100 selection:bg-primary selection:text-white">
+<!-- VIDEO BACKGROUND LAYER -->
+<div id="video-background-layer">
+<video id="bg-video" autoplay muted loop playsinline poster="">
+<source src="one.mp4" type="video/mp4">
+Your browser does not support HTML5 video.
+</video>
+</div>
+<!-- ATMOSPHERIC OVERLAYS -->
+<div class="cinematic-overlay"></div>
+<div class="scanlines"></div>
+<!-- PARTICLE SYSTEM CONTAINER -->
+<canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"></canvas>
+<!-- NAV BAR -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 nav-wrapper opacity-0">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<!-- LEFT: Rocket Icon & Title -->
+<div class="flex items-center space-x-2 cursor-pointer group" onclick="window.scrollTo(0,0)">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(196,30,58,0.5)] group-hover:rotate-12 transition-transform duration-500">
+<span class="material-icons text-white">rocket_launch</span>
+</div>
+<span class="text-2xl font-bold tracking-tighter text-white font-orbitron uppercase group-hover:tracking-widest transition-all duration-300">AEROCREST <span class="text-primary">2026</span></span>
+</div>
+<!-- CENTER: Links (Hidden on Mobile) -->
+    <div class="hidden md:flex space-x-8 items-center font-orbitron text-[10px] font-bold tracking-[0.2em] uppercase">
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#mission">
+            <span class="relative z-10">Mission</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#timeline">
+            <span class="relative z-10">Timeline</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#challenges">
+            <span class="relative z-10">Challenges</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#rewards">
+            <span class="relative z-10">Rewards</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+    </div>
+
+    <!-- RIGHT: Register Button + College Logo -->
+    <div class="flex items-center gap-4">
+        <button onclick="document.getElementById('register').scrollIntoView()" class="nav-cta bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg border border-white/10 hover:shadow-[0_0_20px_rgba(255,69,0,0.6)]">
+            Register
+        </button>
+        
+        <!-- NEW LOGO ADDITION -->
+        <a href="https://crescent.education/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity duration-300">
+            <img src="logo.png" alt="BS Crescent Institute" class="h-12 w-auto object-contain bg-white/5 rounded-md p-1 backdrop-blur-sm border border-white/10 hover:border-accent-gold transition-colors">
+        </a>
+    </div>
+</div>
+</nav>
+<!-- HERO -->
+<section class="relative min-h-screen flex items-center justify-center pt-20 mars-hud-bg overflow-hidden">
+<div class="relative z-10 text-center px-4">
+<div class="hero-badge inline-block px-4 py-1 border border-accent-mars/50 bg-accent-mars/5 rounded-full text-accent-mars text-[10px] font-black mb-6 tracking-[0.2em] font-orbitron opacity-0">
+SYSTEM STATUS: ENLISTMENT ACTIVE
+</div>
+<h1 class="hero-title text-6xl md:text-9xl font-black mb-6 tracking-tighter glow-text font-orbitron italic perspective-text">
+<span class="inline-block">AEROCREST</span> <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent-mars to-accent-gold uppercase inline-block">M.A.R.S 2026</span>
+</h1>
+<p class="hero-subtitle text-lg md:text-2xl text-orange-100 max-w-3xl mx-auto mb-10 font-light font-display uppercase tracking-widest opacity-0">
+A virtual Mars Atmospheric Resilient Shelter [M.A.R.S] challenge
+</p>
+<div class="hero-buttons flex flex-col sm:flex-row items-center justify-center gap-6 opacity-0">
+<button onclick="document.getElementById('register').scrollIntoView()" class="w-full sm:w-auto bg-primary hover:bg-accent-mars text-white px-12 py-5 rounded-sm font-black text-xl font-orbitron tracking-tighter transition-all transform hover:scale-110 shadow-[0_0_40px_rgba(196,30,58,0.4)] hover:shadow-[0_0_60px_rgba(255,69,0,0.8)] border border-transparent hover:border-white/50">
+INITIALIZE_REGISTRATION
+</button>
+<button onclick="document.getElementById('mission').scrollIntoView()" class="w-full sm:w-auto bg-white/5 border border-white/20 hover:bg-white/10 text-white px-12 py-5 rounded-sm font-black text-xl font-orbitron tracking-tighter transition-all hover:tracking-wide">
+VIEW_PROPOSAL
+</button>
+</div>
+</div>
+<div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-70 animate-bounce">
+    <span class="text-[10px] uppercase tracking-widest mb-2 font-orbitron">Scroll to initialize</span>
+    <span class="material-icons">keyboard_double_arrow_down</span>
+</div>
+</section>
+<!-- MISSION / PROPOSAL -->
+<section class="py-24 px-6 relative z-10" id="mission">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-6 gs-reveal-left">
+<h2 class="text-5xl font-black font-orbitron uppercase italic typing-effect">The Mission</h2>
+<p class="text-lg text-orange-100/80 leading-relaxed font-display">
+Organized by the <span class="text-white font-bold">Dept. of Aerospace Engineering</span>, this hackathon challenges students to design a software-based emergency habitat sustaining <span class="text-accent-gold font-bold">2 astronauts for 30 days</span> under extreme Martian constraints.
+</p>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-colors">
+<p class="text-[10px] text-accent-mars font-bold font-orbitron uppercase">Event Date</p>
+<p class="font-bold">March 23, 2026</p>
+</div>
+<div class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-colors">
+<p class="text-[10px] text-accent-mars font-bold font-orbitron uppercase">Venue</p>
+<p class="font-bold">BSA Crescent Auditorium</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-2xl gs-reveal-right hover:scale-[1.02] duration-500">
+<h3 class="font-orbitron font-bold text-accent-gold mb-6 uppercase text-xs tracking-widest flex items-center gap-2">
+<span class="material-icons text-sm animate-spin-slow">pie_chart</span> Budget Allocation
+</h3>
+<div class="space-y-4">
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span>Total Budget Required</span>
+<span class="font-bold counter" data-target="64000">0</span>
+</div>
+<div class="flex justify-between border-b border-white/10 pb-2">
+<span>From Management</span>
+<span class="font-bold counter" data-target="34000">0</span>
+</div>
+</div>
+<div class="mt-6 w-full h-2 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-accent-mars progress-animate" style="width: 0%" data-width="53%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- TIMELINE -->
+<section class="py-32 bg-black/20" id="timeline">
+<div class="max-w-5xl mx-auto px-6">
+<h2 class="text-center text-5xl font-black font-orbitron mb-20 italic uppercase tracking-tighter gs-fade-up">Mission_Timeline</h2>
+<div class="timeline-container">
+<div class="timeline-line"></div>
+<!-- 1. Registration Opening (Right) -->
+        <div class="timeline-item">
+            <div class="timeline-content text-right pr-12">
+                <p class="text-accent-mars font-black text-xs font-orbitron mb-1">FEB 15</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Registration Opening</h4>
+                <p class="text-gray-400 text-sm">Official squad enlistment begins.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 01</span></div>
+        </div>
+
+        <!-- 2. Registration Close (Left) -->
+        <div class="timeline-item flex-row-reverse">
+            <div class="timeline-content text-left pl-12">
+                <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 09</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Registration Close</h4>
+                <p class="text-gray-400 text-sm">Registration closes.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 22</span></div>
+        </div>
+
+        <!-- 3. Problem Statement (Right) -->
+        <div class="timeline-item">
+            <div class="timeline-content text-right pr-12">
+                <p class="text-accent-gold font-black text-xs font-orbitron mb-1">MAR 10-11</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Problem Statement Release</h4>
+                <p class="text-gray-400 text-sm">Release of Problem Statement.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 23</span></div>
+        </div>
+
+        <!-- 4. Webinar-I (Left) -->
+        <div class="timeline-item flex-row-reverse">
+            <div class="timeline-content text-left pl-12">
+                <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 14</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Webinar-I (10:30 AM)</h4>
+                <p class="text-gray-400 text-sm">Expert briefing session.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 27</span></div>
+        </div>
+
+        <!-- 5. Round-I (Right) -->
+        <div class="timeline-item">
+            <div class="timeline-content text-right pr-12">
+                <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 17</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Round-I Submission</h4>
+                <p class="text-gray-400 text-sm">Submit before 6:30 PM.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 30</span></div>
+        </div>
+
+        <!-- 6. Finalist Selection (Left) -->
+        <div class="timeline-item flex-row-reverse">
+            <div class="timeline-content text-left pl-12">
+                <p class="text-accent-gold font-black text-xs font-orbitron mb-1">MAR 20</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Selection of Finalist</h4>
+                <p class="text-gray-400 text-sm">Crew roster announcement.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 33</span></div>
+        </div>
+
+        <!-- 7. Hackathon (Right) -->
+        <div class="timeline-item">
+            <div class="timeline-content text-right pr-12">
+                <p class="text-primary font-black text-xs font-orbitron mb-1">MAR 23</p>
+                <h4 class="text-xl font-bold font-orbitron uppercase">Hackathon Day</h4>
+                <p class="text-gray-400 text-sm">Report (10 pages) & Presentation.</p>
+            </div>
+            <div class="timeline-node"><div class="node-dot"></div></div>
+            <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DEPLOY</span></div>
+        </div>
+
+    </div>
+</div>
+</section>
+<!-- CHALLENGES -->
+<section class="py-32 px-6" id="challenges">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
+<div class="h-56 overflow-hidden relative">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoxugbHzBNQjieNi4jUtGcjX2ogwgambxNjAKEgOXSLF2-RjDcZ5Zk0nuCHT70govvC87JRxdwLWKf3C0B98QPQXUrqjWxaLMD0MqVdf1QGj9kghOjfAyotaGpMRKQrRb5xoN9ie-0QLRRM-NgJ0lvzrJNojnj5N-WU1cUvhavnaCn4fu4npHPecmEJH6q2F-5H1SQdL8vz1-pa-F6vUq01WNoBCB-hnHiAZ0PcX-Laii_8EHlro-2XR37gw8MgAEpreOXRQX9BJEb" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
+</div>
+<div class="p-8 relative">
+<h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Dust Storm Resiliency</h4>
+<p class="text-gray-400 text-sm leading-relaxed mb-8">Design a shelter capable of withstanding 100km/h winds and fine particle infiltration.</p>
+<button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
+<div class="h-56 overflow-hidden relative">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFk5ruent_HYQWVeaVjATVPZ6iaKO-R52y91NUS4bMBqY-ZGSv3BsXvzi8U5GQlVB9tBHr0gdM0vMAgKjGxp1ekVDBj9jfr437Ot8sfcqgQ12_-hAhpBkm10UMOaH268qifOsLAYK0PjOPwyuSFa37lR963J9DD-CjvaMAgFVi6zQvltXNb_HCuMJMSiqlQjm7QfDRsUJ53N52F25sosL5pKavaTWo_xFCyn3TnuYKKKu2snNSNR4Vx2PJVSZgX_wTnqPqGcqMEztq" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
+</div>
+<div class="p-8 relative">
+<h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Solar Flare Shielding</h4>
+<p class="text-gray-400 text-sm leading-relaxed mb-8">Develop a temporary habitat with high radiation attenuation factors for crew safety.</p>
+<button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
+<div class="h-56 overflow-hidden relative">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1rHWvZfL8tonrWqjj0tJO547hCaRoWpPDmzjVuCaraXHzcaEt6vjPL32AkkY9TReBamjNWtjXgdq3Um76PUFZRMRFaRBmM-Zjrq4QjmwBzHQXVGfzWRAXetiWAsZtkQhov5rUoWInK83HlAnVqBIMdWD5pWT16eGQZVTerLKXgpPKhsnGEVyxgnW5abkz-IjtT5mp-J2A2fv5lXTBbW5anKZEyVNfSoopxN-zGy7MZ0UtIILLKa2eAPwUbmJA5cNhJsQDq2mMZ9x9" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
+</div>
+<div class="p-8 relative">
+<h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Life Support Loss</h4>
+<p class="text-gray-400 text-sm leading-relaxed mb-8">Propose a deployable shelter focused on passive insulation for thermal survival.</p>
+<button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- REWARDS -->
+<section class="py-32 relative" id="rewards">
+<div class="max-w-7xl mx-auto px-6 text-center">
+<h2 class="text-5xl md:text-7xl font-black font-orbitron italic uppercase text-white mb-24 tracking-tighter glow-text gs-scale-up">
+REWARDS & <span class="text-accent-gold">PRIZES</span>
+</h2>
+<div class="fan-container relative h-[500px] flex justify-center items-center perspective-1000">
+        <!-- Card Left -->
+        <div class="fan-card card-left absolute w-80 h-96 bg-gradient-to-br from-red-900/90 via-primary-dark/90 to-black/90 rounded-3xl border-2 border-red-500/30 p-8 shadow-2xl flex flex-col justify-center transform -rotate-6 -translateX-20 backdrop-blur-md">
+            <h5 class="font-orbitron font-bold text-white text-xl mb-4">SPECIAL AWARDS</h5>
+            <div class="h-[1px] bg-white/20 w-full mb-4"></div>
+            <ul class="text-sm text-gray-400 space-y-3 text-left">
+                <li class="flex items-center gap-2"><span class="material-icons text-primary text-sm">stars</span> Best Presentation</li>
+                <li class="flex items-center gap-2"><span class="material-icons text-primary text-sm">stars</span> Structural Logic</li>
+                <li class="flex items-center gap-2"><span class="material-icons text-primary text-sm">stars</span> Young Changemaker</li>
+            </ul>
+        </div>
+        
+        <!-- Card Right -->
+        <div class="fan-card card-right absolute w-80 h-96 bg-gradient-to-br from-orange-900/90 via-accent-mars/90 to-black/90 rounded-3xl border-2 border-orange-500/30 p-8 shadow-2xl flex flex-col justify-center transform rotate-6 translateX-20 backdrop-blur-md">
+            <h5 class="font-orbitron font-bold text-white text-xl mb-4">PARTICIPATION</h5>
+            <div class="h-[1px] bg-white/20 w-full mb-4"></div>
+            <ul class="text-sm text-gray-400 space-y-3 text-left">
+                <li class="flex items-center gap-2"><span class="material-icons text-accent-gold text-sm">verified</span> Industry Certificates</li>
+                <li class="flex items-center gap-2"><span class="material-icons text-accent-gold text-sm">verified</span> Expert Workshop Access</li>
+            </ul>
+        </div>
+
+        <!-- Card Center (Grand Prize) -->
+        <div class="fan-card card-center absolute w-[450px] h-[320px] bg-gradient-to-b from-accent-mars via-primary to-primary-dark rounded-3xl border-4 border-accent-gold p-8 shadow-[0_0_60px_rgba(255,69,0,0.5)] flex flex-col items-center justify-center z-40">
+            <span class="material-icons text-6xl text-white mb-2 animate-pulse-slow">emoji_events</span>
+            <h3 class="text-5xl font-black font-orbitron text-white mb-2 tracking-tighter glow-text">₹1,00,000+</h3>
+            <p class="font-orbitron font-bold text-xs uppercase text-orange-200 tracking-widest mb-6">Grand Prize Reward</p>
+            <div class="bg-black/40 rounded-xl p-4 w-full border border-white/10 space-y-2">
+                <div class="flex items-center gap-2 text-sm text-white font-bold"><span class="material-icons text-xs">check_circle</span> Direct Internship Opportunity</div>
+                <div class="flex items-center gap-2 text-sm text-white font-bold"><span class="material-icons text-xs">check_circle</span> Investor Consultation (40 hrs)</div>
+                <div class="flex items-center gap-2 text-sm text-white font-bold"><span class="material-icons text-xs">check_circle</span> ₹50,000 Cash Component</div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- GALLERY SECTION (ADDED) -->
+<section class="py-32 px-6 bg-black/30" id="gallery">
+<div class="max-w-7xl mx-auto">
+<h2 class="text-center text-5xl font-black font-orbitron mb-16 italic uppercase tracking-tighter gs-fade-up">MISSION_MOMENTS</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+<!-- Large Feature Image -->
+<div class="col-span-2 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+<img src="https://images.unsplash.com/photo-1541873676-a18131494184?q=80&w=1000&auto=format&fit=crop" alt="Mission Control" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+<div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<span class="material-icons text-4xl text-accent-gold">visibility</span>
+</div>
+</div>
+<!-- Standard Images -->
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1614728853970-32a22507da63?q=80&w=500&auto=format&fit=crop" alt="Mars Surface" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+        
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=500&auto=format&fit=crop" alt="Blueprint" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=500&auto=format&fit=crop" alt="Orbit" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=500&auto=format&fit=crop" alt="Space Shuttle" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <!-- Tall Image -->
+        <div class="col-span-1 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1454789548728-85d2696cf667?q=80&w=500&auto=format&fit=crop" alt="Astronaut" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <!-- Remaining Grid -->
+        <div class="col-span-2 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" alt="Code" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-4xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=500&auto=format&fit=crop" alt="Red Planet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+
+        <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=500&auto=format&fit=crop" alt="Tech" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+         <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+            <img src="https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?q=80&w=500&auto=format&fit=crop" alt="Galaxy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-icons text-2xl text-accent-gold">visibility</span>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- TEAM SECTION (NO ANIMATION, LARGER STUDENT IMAGES) -->
+<section class="py-32 px-6 relative z-10" id="team">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-center text-5xl font-black font-orbitron mb-24 italic uppercase tracking-tighter">Mission_Leadership</h2>
+        
+        <!-- Faculty -->
+        <div class="mb-24">
+            <div class="flex items-center justify-center gap-4 mb-12 opacity-80">
+                <div class="h-[1px] w-12 bg-accent-gold"></div>
+                <h3 class="text-xl font-orbitron text-accent-gold uppercase tracking-[0.2em] font-bold">Faculty Commanders</h3>
+                <div class="h-[1px] w-12 bg-accent-gold"></div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-10 md:gap-20">
+                <!-- Faculty 1 -->
+                <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10">
+                        <img src="faculty-1.jpg" alt="Faculty Advisor" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Dr.Magesh</h4>
+                    <p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Head of the Department</p>
+                </div>
+                
+                <!-- Faculty 2 -->
+                <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
+                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10">
+                        <img src="faculty-2.jpg" alt="Event Mentor" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Mr.Venkataramanan</h4>
+                    <p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Assistant Professor</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students -->
+        <div>
+            <div class="flex items-center justify-center gap-4 mb-12 opacity-80">
+                <div class="h-[1px] w-12 bg-white/30"></div>
+                <h3 class="text-xl font-orbitron text-white/70 uppercase tracking-[0.2em] font-bold">Flight Crew (Students)</h3>
+                <div class="h-[1px] w-12 bg-white/30"></div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <!-- Student 1 -->
+                <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                    <!-- CHANGED: w-24 h-24 to w-32 h-32 -->
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                        <img src="student-1.jpg" alt="Student Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                    </div>
+                    <h4 class="font-bold font-orbitron text-white">Abdul Riyaz</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Mission Director</p>
+                </div>
+                
+                <!-- Student 2 -->
+                <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                    <!-- CHANGED: w-24 h-24 to w-32 h-32 -->
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                        <img src="student-2.jpg" alt="Student Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                    </div>
+                    <h4 class="font-bold font-orbitron text-white">Hari Sree Charan</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Tech Lead</p>
+                </div>
+                
+                <!-- Student 3 -->
+                <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                    <!-- CHANGED: w-24 h-24 to w-32 h-32 -->
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                        <img src="student-3.jpg" alt="Student Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                    </div>
+                    <h4 class="font-bold font-orbitron text-white">Abdul Azeez</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Ops Head</p>
+                </div>
+                
+                <!-- Student 4 -->
+                <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                    <!-- CHANGED: w-24 h-24 to w-32 h-32 -->
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                        <img src="student-4.jpg" alt="Student Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                    </div>
+                    <h4 class="font-bold font-orbitron text-white">Mukeshwaran</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Design Lead</p>
+                </div>
+
+                <!-- Student 5 -->
+                <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                    <!-- CHANGED: w-24 h-24 to w-32 h-32 -->
+                    <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                        <img src="student-5.jpg" alt="Student Lead" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                    </div>
+                    <h4 class="font-bold font-orbitron text-white">Tejasree</h4>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Logistics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- REGISTER -->
+<section class="py-32 px-6" id="register">
+<div class="max-w-4xl mx-auto glass-panel p-12 rounded-[40px] border-t-8 border-primary relative overflow-hidden gs-reveal-up">
+<div class="text-center mb-10">
+<h2 class="text-5xl font-black font-orbitron italic mb-4 uppercase tracking-tighter">Enlist_Squad</h2>
+<p class="text-accent-mars font-bold tracking-[0.3em] text-xs uppercase animate-pulse">Transmission window locks March 09</p>
+</div>
+<form id="missionForm" class="space-y-8 relative z-10">
+<div class="grid md:grid-cols-2 gap-8">
+<input required type="text" placeholder="SQUAD NAME" class="w-full bg-black/40 border border-white/10 p-5 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 focus:scale-[1.01] outline-none transition-all duration-300">
+<select class="w-full bg-black/40 border border-white/10 p-5 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+<option class="text-black">2 COLONISTS</option>
+<option class="text-black">3 COLONISTS</option>
+<option class="text-black">4 COLONISTS</option>
+</select>
+</div>
+<input required type="email" placeholder="PRIMARY FREQUENCY (EMAIL)" class="w-full bg-black/40 border border-white/10 p-5 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 focus:scale-[1.01] outline-none transition-all duration-300">
+<textarea rows="4" placeholder="MISSION LOGS (CREW COMPETENCIES)..." class="w-full bg-black/40 border border-white/10 p-5 rounded-sm text-white font-bold resize-none uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 focus:scale-[1.01] outline-none transition-all duration-300"></textarea>
+<button type="submit" class="w-full bg-primary hover:bg-accent-mars py-6 rounded-sm font-orbitron font-black text-2xl transition-all shadow-xl uppercase tracking-tighter relative overflow-hidden group">
+<span class="relative z-10">Transmit_Enlistment</span>
+<div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 skew-x-12"></div>
+</button>
+</form>
+</div>
+</section>
+<!-- SPEAKERS -->
+<section class="py-32 px-6" id="speakers">
+<div class="max-w-7xl mx-auto">
+<h2 class="text-center text-5xl font-black font-orbitron mb-20 italic uppercase tracking-tighter gs-reveal-up">Martian_Council</h2>
+<div class="grid md:grid-cols-3 gap-8 text-center">
+<div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+<div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div>
+<h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+<p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert I</p>
+</div>
+<div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+<div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div>
+<h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+<p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert II</p>
+</div>
+<div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+<div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div>
+<h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+<p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert III</p>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ SECTION (ADDED) -->
+<section class="py-32 px-6" id="faq">
+<div class="max-w-4xl mx-auto">
+<h2 class="text-center text-5xl font-black font-orbitron mb-16 italic uppercase tracking-tighter gs-reveal-up">Mission_Intel</h2>
+<div class="glass-panel rounded-2xl p-4 md:p-8 space-y-4 gs-reveal-up">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">What is the required squad size?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Mission protocols mandate a minimum of 2 and a maximum of 4 colonists per squad. Solo missions are not authorized for this simulation.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">Is there an enlistment fee?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Negative. Enlistment for AEROCREST 2026 is completely free of charge. Access is open to all qualified cadets.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">Who is eligible to participate?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Any undergraduate or postgraduate student with a valid university ID card is eligible to join the mission. Interdisciplinary squads are encouraged.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">Is this a remote or on-site mission?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Round I is a virtual submission. Finalists must deploy to BSA Crescent Auditorium on March 23, 2026, for the live hackathon.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">Do we need coding or CAD skills?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    While not mandatory, proficiency in CAD (for habitat design) or simulation software will significantly enhance your mission success probability.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 6 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">What constitutes the Final Submission?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Squads must submit a 10-page technical report and present their solution to the Martian Council (Judges) on deployment day.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 7 -->
+        <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50">
+            <button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group">
+                <span class="font-orbitron font-bold text-white text-lg">How do I contact Mission Control?</span>
+                <span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span>
+            </button>
+            <div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">
+                    Transmit inquiries to support@aerocrest.edu or utilize the live comms channel on our social media handles.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- FOOTER -->
+<footer class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center relative z-20">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-white font-orbitron uppercase">AEROCREST <span class="text-primary">2026</span></span>
+<p class="text-gray-500 font-bold uppercase text-[9px] tracking-[0.4em] hover:text-white transition-colors">BSA Crescent Aerospace © 2026 // Nominal Ops.</p>
+</div>
+</footer>
+<script>
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// --- PARTICLE SYSTEM (Space Dust) ---
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let width, height;
+let particles = [];
+
+function resize() {
+width = canvas.width = window.innerWidth;
+height = canvas.height = window.innerHeight;
+}
+
+class Particle {
+constructor() {
+this.x = Math.random() * width;
+this.y = Math.random() * height;
+this.size = Math.random() * 2;
+this.speedY = Math.random() * 0.5 + 0.1;
+this.opacity = Math.random() * 0.5 + 0.1;
+}
+update() {
+this.y -= this.speedY;
+if (this.y < 0) this.y = height;
+}
+draw() {
+ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+ctx.beginPath();
+ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+ctx.fill();
+}
+}
+
+function initParticles() {
+for(let i=0; i<100; i++) particles.push(new Particle());
+}
+function animateParticles() {
+ctx.clearRect(0,0,width,height);
+particles.forEach(p => { p.update(); p.draw(); });
+requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', resize);
+resize();
+initParticles();
+animateParticles();
+
+// --- ANIMATIONS ---
+
+// 1. Hero Reveal Sequence
+const tl = gsap.timeline();
+tl.to(".nav-wrapper", { opacity: 1, duration: 1, ease: "power2.out" })
+.to(".hero-badge", { opacity: 1, duration: 0.5 }, "-=0.5")
+.from(".hero-title span", {
+y: 100,
+opacity: 0,
+duration: 1.2,
+stagger: 0.2,
+ease: "power4.out"
+}, "-=0.3")
+.to(".hero-subtitle", { opacity: 1, duration: 0.8 }, "-=0.5")
+.to(".hero-buttons", { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }, "-=0.5");
+
+// 2. Typewriter Effect for Section Headers
+gsap.utils.toArray(".typing-effect").forEach(text => {
+gsap.from(text, {
+scrollTrigger: { trigger: text, start: "top 80%" },
+text: { value: "" },
+duration: 1.5,
+ease: "none"
+});
+});
+
+// 3. Mission Section Fade
+gsap.from(".gs-reveal-left", {
+scrollTrigger: { trigger: ".gs-reveal-left", start: "top 80%" },
+x: -50, opacity: 0, duration: 1, ease: "power2.out"
+});
+gsap.from(".gs-reveal-right", {
+scrollTrigger: { trigger: ".gs-reveal-right", start: "top 80%" },
+x: 50, opacity: 0, duration: 1, ease: "power2.out"
+});
+
+// 4. Number Counter
+gsap.utils.toArray(".counter").forEach(counter => {
+const target = counter.getAttribute("data-target");
+gsap.to(counter, {
+scrollTrigger: { trigger: counter, start: "top 85%" },
+innerText: target,
+duration: 2,
+snap: { innerText: 1 },
+ease: "power1.inOut",
+onUpdate: function() {
+this.targets()[0].innerText = "₹" + Math.ceil(this.targets()[0].innerText).toLocaleString();
+}
+});
+});
+
+// Progress Bar
+gsap.to(".progress-animate", {
+scrollTrigger: { trigger: ".progress-animate", start: "top 85%" },
+width: "53%",
+duration: 1.5,
+ease: "power2.out"
+});
+
+// 5. Timeline Drawing & Node Pop
+gsap.to(".timeline-line", {
+scrollTrigger: { trigger: ".timeline-container", start: "top 70%", end: "bottom 70%", scrub: 1 },
+height: "100%",
+ease: "none"
+});
+
+gsap.utils.toArray(".timeline-item").forEach((item, i) => {
+gsap.to(item, {
+scrollTrigger: { trigger: item, start: "top 80%" },
+opacity: 1,
+y: 0,
+duration: 0.5
+});
+gsap.to(item.querySelector(".timeline-node"), {
+scrollTrigger: { trigger: item, start: "top 80%" },
+scale: 1,
+duration: 0.5,
+delay: 0.2,
+ease: "back.out(1.7)"
+});
+});
+
+// 6. Card Stagger
+gsap.utils.toArray(".gs-card-stagger").forEach((card, i) => {
+gsap.from(card, {
+scrollTrigger: { trigger: card, start: "top 90%" },
+y: 50,
+opacity: 0,
+duration: 0.8,
+delay: i * 0.1,
+ease: "power2.out"
+});
+});
+
+// 7. Rewards Scale
+gsap.from(".gs-scale-up", {
+scrollTrigger: { trigger: "#rewards", start: "top 70%" },
+scale: 0.8, opacity: 0, duration: 1, ease: "power2.out"
+});
+
+// 8. Register Form
+gsap.from(".gs-reveal-up", {
+scrollTrigger: { trigger: "#register", start: "top 75%" },
+y: 50, opacity: 0, duration: 1, ease: "power2.out"
+});
+
+// Mouse Trail Effect
+document.addEventListener('mousemove', (e) => {
+const trail = document.createElement('div');
+trail.className = 'cursor-trail';
+trail.style.left = e.clientX + 'px';
+trail.style.top = e.clientY + 'px';
+document.body.appendChild(trail);
+
+setTimeout(() => {
+trail.style.opacity = '0';
+trail.style.transform = 'scale(0)';
+}, 10);
+setTimeout(() => trail.remove(), 300);
+});
+
+// Existing Form Submission Logic
+document.getElementById('missionForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const btn = e.target.querySelector('button');
+const originalText = btn.innerHTML;
+btn.innerHTML = '<span class="animate-pulse">TRANSMITTING TO ORBITER...</span>';
+
+// GSAP shake effect on button
+gsap.to(btn, { x: [-2, 2, -2, 2, 0], duration: 0.3 });
+
+setTimeout(() => {
+alert("TRANSMISSION SUCCESSFUL. MISSION PARAMETERS SYNCED.");
+btn.innerHTML = "SYNC_COMPLETE";
+btn.style.background = "#ff8c00";
+}, 2000);
+});
+</script>
+<!-- FAQ ACCORDION LOGIC -->
+<script>
+document.querySelectorAll('.faq-toggle').forEach(button => {
+button.addEventListener('click', () => {
+const content = button.nextElementSibling;
+const icon = button.querySelector('.material-icons');
+
+// Close all other FAQs
+document.querySelectorAll('.faq-content').forEach(otherContent => {
+if (otherContent !== content) {
+otherContent.style.height = '0';
+otherContent.previousElementSibling.querySelector('.material-icons').innerText = 'add';
+otherContent.previousElementSibling.querySelector('.material-icons').style.transform = 'rotate(0deg)';
+}
+});
+
+// Toggle current
+if (content.style.height === '0px' || !content.style.height) {
+content.style.height = content.scrollHeight + 'px';
+icon.innerText = 'remove';
+icon.style.transform = 'rotate(180deg)';
+} else {
+content.style.height = '0';
+icon.innerText = 'add';
+icon.style.transform = 'rotate(0deg)';
+}
+});
+});
+</script>
+</body>
+</html>
