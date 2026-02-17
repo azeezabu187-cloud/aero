@@ -15,6 +15,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<!-- MOBILE RESPONSIVENESS CSS -->
+<link rel="stylesheet" href="mobile.css" media="screen and (max-width: 768px)">
+
 <script id="tailwind-config">
 tailwind.config = {
 darkMode: "class",
@@ -485,6 +488,20 @@ transition: opacity 0.3s;
     pointer-events: none;
     transform-style: preserve-3d;
 }
+
+/* --- CUSTOM ASTRONAUT CURSOR --- */
+@media (pointer: fine) {
+    body,
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    .cursor-pointer {
+        cursor: url('Star Wars/astro-cursor.cur') 2 2, auto;
+    }
+}
 </style>
 </head>
 <body class="text-slate-100 selection:bg-primary selection:text-white">
@@ -527,14 +544,19 @@ Your browser does not support HTML5 video.
             <span class="relative z-10">Challenges</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#rewards">
-            <span class="relative z-10">Rewards</span>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="merchandise.html">
+            <span class="relative z-10">Merchandise</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
         </a>
     </div>
 
     <!-- RIGHT: Register Button + College Logo -->
     <div class="flex items-center gap-4">
+        <!-- ADDED: SPONSOR US BUTTON -->
+        <a href="sponsor.html" class="hidden md:block text-accent-gold font-bold font-orbitron text-xs tracking-widest hover:text-white transition-colors border border-accent-gold/50 hover:border-white px-6 py-2 rounded-full hover:shadow-[0_0_15px_rgba(255,140,0,0.5)]">
+            SPONSOR_US
+        </a>
+        
         <button onclick="document.getElementById('register').scrollIntoView()" class="nav-cta bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg border border-white/10 hover:shadow-[0_0_20px_rgba(255,69,0,0.6)]">
             Register
         </button>
@@ -1067,9 +1089,9 @@ VIEW_PROPOSAL
                 <div class="mb-24">
                     <div class="flex items-center justify-center gap-4 mb-12 opacity-80"><div class="h-[1px] w-12 bg-accent-gold"></div><h3 class="text-xl font-orbitron text-accent-gold uppercase tracking-[0.2em] font-bold">Faculty Members</h3><div class="h-[1px] w-12 bg-accent-gold"></div></div>
                     <div class="flex flex-wrap justify-center gap-10 md:gap-20">
-                        <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
+                            <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10"><img src="faculty-1.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
+                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10"><img src="faculty-1.jpg" class="w-full h-full object-cover"></div>
                             <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Dr.Magesh</h4><p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Head of the Department</p>
                         </div>
                         <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
@@ -1754,4 +1776,3 @@ icon.style.transform = 'rotate(0deg)';
 </script>
 </body>
 </html>
-
