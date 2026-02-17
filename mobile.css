@@ -1,0 +1,385 @@
+@media screen and (max-width: 768px) {
+    /* =========================================
+       1. GLOBAL LAYOUT & TYPOGRAPHY
+       ========================================= */
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    section {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        overflow: hidden; /* Prevents horizontal scroll from animations */
+    }
+
+    /* Headings */
+    .hero-title {
+        font-size: 3rem !important;
+        line-height: 1.1;
+    }
+
+    .hero-title span.text-transparent {
+        font-size: 2.2rem !important;
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem !important;
+        margin-bottom: 2rem !important;
+        padding: 0 1rem;
+        line-height: 1.6;
+    }
+
+    h2.text-7xl, .text-7xl {
+        font-size: 2.5rem !important;
+        line-height: 1.1 !important;
+        word-wrap: break-word;
+    }
+
+    h2.text-5xl, .text-5xl {
+        font-size: 2rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* =========================================
+       2. NAVIGATION & HERO
+       ========================================= */
+    .nav-wrapper .max-w-7xl {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        height: auto !important; /* Allow height to grow for stacked items */
+        min-height: 5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .nav-cta {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* Stack buttons vertically */
+    .hero-buttons {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        width: 100% !important;
+    }
+
+    .hero-buttons button {
+        width: 100% !important;
+        padding: 1rem !important;
+        font-size: 1rem !important;
+    }
+
+    /* FORCE SPONSOR BUTTON VISIBILITY ON MOBILE */
+    nav .hidden.md\:block {
+        display: block !important;
+        font-size: 0.65rem !important; /* Smaller text for mobile */
+        padding: 0.4rem 0.8rem !important;
+        white-space: nowrap;
+    }
+
+    /* Adjust the right-side container in nav to fit items */
+    nav .flex.items-center.gap-4 {
+        gap: 0.5rem !important;
+    }
+    
+    /* Hide the college logo on very small screens if needed to save space, 
+       or keep it small */
+    nav img[alt="BS Crescent Institute"] {
+        height: 2rem !important;
+        width: auto !important;
+    }
+
+    /* =========================================
+       3. 3D CUBE LOCK (Mission Gateway)
+       ========================================= */
+    .cube-lock-container {
+        --cube-size: 160px !important; /* Smaller cube for mobile */
+    }
+    
+    .cube-scene {
+        width: 160px !important;
+        height: 160px !important;
+    }
+    
+    .cube-face {
+        width: 160px !important;
+        height: 160px !important;
+        font-size: 24px !important;
+        border-width: 1px !important;
+    }
+
+    /* Recalculate 3D transforms for 160px size (TranslateZ = 80px) */
+    .cube-face.front  { transform: rotateY(0deg) translateZ(80px) !important; }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(80px) !important; }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(80px) !important; }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(80px) !important; }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(80px) !important; }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(80px) !important; }
+
+    /* =========================================
+       4. MISSION DASHBOARD (Countdown)
+       ========================================= */
+    #mission .flex.flex-col.md\:flex-row {
+        align-items: center !important;
+        text-align: center !important;
+        gap: 2rem !important;
+    }
+    
+    #mission .text-left {
+        text-align: center !important;
+        width: 100%;
+    }
+
+    /* Countdown Grid */
+    #mission .flex.gap-4 {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem !important;
+    }
+
+    .countdown-box {
+        min-width: auto !important;
+        padding: 8px 2px !important;
+    }
+
+    .countdown-val {
+        font-size: 1.2rem !important;
+    }
+
+    .countdown-label {
+        font-size: 0.4rem !important;
+    }
+
+    /* =========================================
+       5. TIMELINE
+       ========================================= */
+    .timeline-container {
+        padding: 20px 0 !important;
+    }
+    .timeline-item {
+        margin-bottom: 40px !important;
+    }
+    .timeline-line {
+        left: 20px !important;
+    }
+    .timeline-node {
+        left: 20px !important;
+        transform: none !important;
+    }
+    
+    /* Force text alignment to left for all items */
+    .timeline-content {
+        width: 80% !important;
+        margin-left: 50px !important;
+        text-align: left !important;
+        padding: 0 !important;
+    }
+    
+    /* Override the reverse flex for right-sided items */
+    .timeline-item.flex-row-reverse {
+        flex-direction: row !important;
+    }
+    .timeline-item.flex-row-reverse .timeline-content {
+        text-align: left !important;
+        padding-left: 0 !important;
+    }
+
+    /* =========================================
+       6. CHALLENGES & TETRAHEDRON
+       ========================================= */
+    #challenges .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+
+    .tetra-scene {
+        transform: scale(0.6) !important;
+        margin: -40px 0 !important;
+    }
+    
+    /* =========================================
+       7. REWARDS SECTION (FIXED ANIMATION)
+       ========================================= */
+    /* Adjust wrapper to allow scrolling space */
+    .stack-wrapper {
+        padding-bottom: 50px !important;
+    }
+
+    /* 
+       The Sticky Logic:
+       On mobile, we make the cards sticky but with offsets so they 
+       stack visibly like a deck of cards.
+    */
+    .stack-card {
+        position: sticky !important;
+        display: block !important; /* Fix flex issue */
+        margin-bottom: 20px !important;
+        /* Default Top */
+        top: 80px !important;
+        z-index: 10;
+    }
+
+    /* Stagger the "stickiness" so they stack neatly */
+    .stack-card:nth-of-type(1) { top: 90px !important; z-index: 10; }
+    .stack-card:nth-of-type(2) { top: 110px !important; z-index: 20; }
+    .stack-card:nth-of-type(3) { top: 130px !important; z-index: 30; }
+
+    /* The Inner Card Design for Mobile */
+    .stack-card > div {
+        /* Remove fixed width/height from desktop */
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        
+        /* Layout */
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 1rem !important;
+        padding: 2rem 1.5rem !important;
+        
+        /* Background needs to be opaque on mobile to hide cards behind */
+        background: #1a0500 !important; 
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.5) !important;
+    }
+
+    /* Typography inside Rewards */
+    .stack-card .text-8xl {
+        font-size: 3rem !important;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stack-card h3 {
+        font-size: 1.8rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .stack-card p.text-2xl {
+        font-size: 0.95rem !important;
+        line-height: 1.5;
+        color: #ccc !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .stack-card .flex.gap-4 {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* =========================================
+       8. GALLERY
+       ========================================= */
+    #gallery .grid {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px !important;
+    }
+    
+    #gallery img {
+        height: 200px !important;
+        width: 100% !important;
+        object-fit: cover;
+    }
+    
+    /* Reset Grid Spans */
+    #gallery .col-span-2, #gallery .row-span-2 {
+        grid-column: auto !important;
+        grid-row: auto !important;
+    }
+
+    /* =========================================
+       9. TEAM & SPEAKERS
+       ========================================= */
+    #team .flex-wrap {
+        gap: 1.5rem !important;
+    }
+    
+    /* Center the cards */
+    #team .glass-panel {
+        width: 100% !important;
+        max-width: 280px !important;
+        margin: 0 auto;
+    }
+
+    #speakers .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* =========================================
+       10. SPHERE LOCK
+       ========================================= */
+    .sphere-scene {
+        width: 80vmin !important;
+        height: 80vmin !important;
+    }
+    
+    .shape-lock-container h3 {
+        font-size: 1.5rem !important;
+        padding: 0 1rem;
+    }
+
+    /* =========================================
+       11. REGISTRATION FORM
+       ========================================= */
+    #register .glass-panel {
+        padding: 1.5rem !important;
+        border-radius: 15px !important;
+    }
+    
+    /* Single Column Form */
+    #register .grid.md\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    #register input {
+        width: 100% !important;
+        font-size: 0.9rem !important;
+        padding: 1rem !important;
+    }
+    
+    #register button {
+        font-size: 1rem !important;
+        padding: 1rem !important;
+    }
+
+    /* =========================================
+       12. FOOTER & MISC
+       ========================================= */
+    .faq-toggle {
+        padding: 1rem !important;
+    }
+    
+    .faq-toggle span.font-orbitron {
+        font-size: 0.85rem !important;
+        padding-right: 10px;
+        line-height: 1.4;
+    }
+
+    footer .flex-col {
+        gap: 1rem !important;
+    }
+    
+    /* Disable Hover transforms on touch */
+    .fan-container:hover .card-left, 
+    .fan-container:hover .card-right {
+        transform: none !important;
+    }
+
+    /* =========================================
+       13. SPONSOR PAGE SPECIFICS
+       ========================================= */
+    .sponsor-page-container {
+        padding-top: 6rem !important; /* Ensure content clears fixed navbar on mobile */
+    }
+}

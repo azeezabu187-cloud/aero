@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AEROCREST 2026 | Sponsorship Opportunities</title>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+<!-- FONT: ROBOTO & ORBITRON -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<!-- MOBILE RESPONSIVENESS CSS -->
+<link rel="stylesheet" href="mobile.css" media="screen and (max-width: 768px)">
+
+<script id="tailwind-config">
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#c41e3a",
+                "accent-mars": "#ff4500",
+                "accent-gold": "#FF8C00", 
+                "light-bg": "#f8fafc",
+            },
+            fontFamily: {
+                "display": ["Roboto", "sans-serif"],
+                "orbitron": ["Orbitron", "sans-serif"],
+                "sans": ["Roboto", "sans-serif"],
+            },
+            boxShadow: {
+                'orange-glow': '0 4px 20px -5px rgba(255, 140, 0, 0.6)',
+                'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+            }
+        },
+    },
+}
+</script>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #000000;
+        color: #1e293b; 
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* --- MARS VIDEO BACKGROUND --- */
+    #video-background-layer {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -50;
+        overflow: hidden;
+    }
+    #bg-video {
+        position: absolute;
+        top: 50%; left: 50%;
+        min-width: 100%; min-height: 100%;
+        width: auto; height: auto;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        opacity: 0.6; /* Visible Mars Video */
+    }
+    
+    /* Darker overlay to make the bright form pop */
+    .cinematic-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+        z-index: -40;
+        pointer-events: none;
+    }
+
+    /* --- BRIGHT MODERN GLASS PANEL (The "Tablet" Look) --- */
+    .glass-panel-light {
+        /* High opacity white to contrast against dark Mars background */
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 
+                    inset 0 0 20px rgba(255, 255, 255, 0.5);
+        transition: transform 0.3s ease;
+    }
+
+    /* --- INPUT FIELDS --- */
+    .modern-input {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #0f172a; 
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .modern-input:focus {
+        border-color: #FF8C00;
+        box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.2);
+        transform: translateY(-1px);
+    }
+    .modern-input::placeholder {
+        color: #64748b;
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+
+    /* --- PARTICLES --- */
+    #floating-particles {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -25;
+        pointer-events: none;
+    }
+    .particle {
+        position: absolute;
+        background: #FF8C00;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #FF8C00;
+        animation: floatParticle 15s infinite linear alternate;
+    }
+    @keyframes floatParticle {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(var(--mx), var(--my)); }
+    }
+
+    /* --- CUSTOM CURSOR --- */
+    @media (pointer: fine) {
+        body, a, button, input, textarea {
+            cursor: url('Star Wars/astro-cursor.cur') 2 2, auto;
+        }
+    }
+</style>
+</head>
+<body class="selection:bg-accent-gold selection:text-white">
+
+<!-- LAYERS -->
+<div id="video-background-layer">
+    <video id="bg-video" autoplay muted loop playsinline poster="">
+        <source src="one.mp4" type="video/mp4">
+    </video>
+</div>
+<div class="cinematic-overlay"></div>
+<div id="floating-particles"></div>
+<canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20]"></canvas>
+
+<!-- NAV BAR -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/90 border-b border-white/20 shadow-lg nav-wrapper opacity-0">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <!-- LEFT: Logo -->
+        <a href="index37.html" class="flex items-center space-x-3 cursor-pointer group">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-500 rounded-lg flex items-center justify-center shadow-orange-glow group-hover:rotate-12 transition-transform duration-500 text-white">
+                <span class="material-icons">rocket_launch</span>
+            </div>
+            <span class="text-2xl font-black tracking-tighter text-slate-900 font-orbitron uppercase">
+                AEROCREST <span class="text-accent-gold">2026</span>
+            </span>
+        </a>
+
+        <!-- CENTER: Links -->
+        <div class="hidden md:flex space-x-8 items-center font-orbitron text-[11px] font-bold tracking-[0.2em] uppercase text-slate-600">
+            <a class="hover:text-accent-gold transition-colors relative group py-2" href="index37.html">
+                Mission
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-gold transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a class="hover:text-accent-gold transition-colors relative group py-2" href="index37.html">
+                Rewards
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-gold transition-all duration-300 group-hover:w-full"></span>
+            </a>
+        </div>
+
+        <!-- RIGHT: Buttons -->
+        <div class="flex items-center gap-4">
+            <a href="index37.html" class="bg-slate-900 hover:bg-accent-gold text-white px-6 py-2 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-orange-glow transform hover:-translate-y-0.5">
+                Register
+            </a>
+            <!-- School Logo -->
+            <a href="https://crescent.education/" target="_blank" class="hover:opacity-80 transition-opacity">
+                <img src="logo.png" alt="Crescent" class="h-10 w-auto object-contain mix-blend-multiply">
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- SPONSORSHIP SECTION -->
+<section class="min-h-screen flex flex-col justify-center items-center pt-32 pb-20 px-6 relative z-10">
+    
+    <!-- MAIN GLASS CARD (Bright White on Dark Mars BG) -->
+    <div class="max-w-4xl w-full mx-auto glass-panel-light p-8 md:p-12 rounded-[30px] gs-reveal-up relative overflow-hidden">
+        
+        <!-- Decoration: Top Gradient Line -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500"></div>
+
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h2 class="text-4xl md:text-5xl font-black font-orbitron italic mb-3 uppercase tracking-tighter text-slate-900">
+                Sponsorship <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Opportunities</span>
+            </h2>
+            <p class="text-slate-600 font-display text-base max-w-2xl mx-auto leading-relaxed font-bold">
+                Partner with the future of aerospace. Gain visibility among elite engineering talent at the AEROCREST 2026 Martian Habitat Challenge.
+            </p>
+            <div class="w-16 h-1 bg-accent-gold mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <!-- Form -->
+        <form id="sponsorForm" class="space-y-6" onsubmit="event.preventDefault(); submitSponsorship(this);">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-500 font-bold tracking-widest block uppercase font-orbitron">Contact Name</label>
+                    <div class="relative">
+                        <span class="material-icons absolute left-4 top-3.5 text-gray-400 text-lg">person</span>
+                        <input required type="text" placeholder="Full Name" class="modern-input w-full p-3.5 pl-12 rounded-xl text-sm outline-none">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-500 font-bold tracking-widest block uppercase font-orbitron">Email Address</label>
+                    <div class="relative">
+                        <span class="material-icons absolute left-4 top-3.5 text-gray-400 text-lg">email</span>
+                        <input required type="email" placeholder="official@company.com" class="modern-input w-full p-3.5 pl-12 rounded-xl text-sm outline-none">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="text-xs text-slate-500 font-bold tracking-widest block uppercase font-orbitron">Organization / Company</label>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-3.5 text-gray-400 text-lg">business</span>
+                    <input required type="text" placeholder="Company Name" class="modern-input w-full p-3.5 pl-12 rounded-xl text-sm outline-none">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-slate-500 font-bold tracking-widest block uppercase font-orbitron">Proposal / Message</label>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-4 text-gray-400 text-lg">chat</span>
+                    <textarea required rows="4" placeholder="Briefly describe your partnership interest..." class="modern-input w-full p-3.5 pl-12 rounded-xl text-sm outline-none resize-none"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white py-4 rounded-xl font-orbitron font-bold text-lg transition-all shadow-lg hover:shadow-orange-glow uppercase tracking-widest mt-6 group relative overflow-hidden">
+                <span class="relative z-10 flex items-center justify-center gap-2">
+                    Initialize Partnership <span class="material-icons text-sm">arrow_forward</span>
+                </span>
+            </button>
+        </form>
+
+        <!-- Success Message -->
+        <div id="sponsorSuccess" class="hidden text-center py-10">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-xl">
+                <span class="material-icons text-4xl text-green-600">check_circle</span>
+            </div>
+            <h3 class="font-orbitron text-3xl text-slate-900 mb-2 font-bold">Proposal Sent</h3>
+            <p class="text-slate-500 font-display">Mission Control has received your transmission.</p>
+        </div>
+
+    </div>
+</section>
+
+<footer class="py-10 px-6 border-t border-white/20 bg-black/80 backdrop-blur-sm text-center relative z-20">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <span class="text-lg font-bold tracking-tighter text-white font-orbitron uppercase">
+            AEROCREST <span class="text-accent-gold">2026</span>
+        </span>
+        <div class="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em]">
+            BSA Crescent Aerospace © 2026
+        </div>
+        <div class="flex gap-4">
+             <a href="#" class="text-gray-400 hover:text-accent-gold transition-colors"><i class="material-icons text-lg">email</i></a>
+             <a href="#" class="text-gray-400 hover:text-accent-gold transition-colors"><i class="material-icons text-lg">public</i></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// --- CANVAS PARTICLES (Bright/Gold for Space) ---
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let width, height;
+let particles = [];
+
+function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+}
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2; 
+        this.speedY = Math.random() * 0.5 + 0.1;
+        this.color = 'rgba(255, 140, 0, '; 
+        this.opacity = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+        this.y -= this.speedY;
+        if (this.y < 0) this.y = height;
+    }
+    draw() {
+        ctx.fillStyle = this.color + this.opacity + ')';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function initParticles() {
+    particles = [];
+    for(let i=0; i<80; i++) particles.push(new Particle());
+}
+function animateParticles() {
+    ctx.clearRect(0,0,width,height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', resize);
+resize();
+initParticles();
+animateParticles();
+
+// --- FLOATING ORBS (CSS) ---
+(function addVisualEffects() {
+    const starContainer = document.getElementById('floating-particles');
+    const count = 30; 
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        const size = Math.random() * 4 + 2 + 'px';
+        p.style.width = size; p.style.height = size;
+        p.style.setProperty('--mx', (Math.random() * 100 - 50) + 'px');
+        p.style.setProperty('--my', (Math.random() * 100 - 50) + 'px');
+        p.style.animationDelay = Math.random() * 5 + 's';
+        p.style.animationDuration = (Math.random() * 10 + 10) + 's'; 
+        starContainer.appendChild(p);
+    }
+})();
+
+// --- ANIMATIONS ---
+const tl = gsap.timeline();
+tl.to(".nav-wrapper", { opacity: 1, duration: 0.8, ease: "power2.out" })
+  .from(".gs-reveal-up", { y: 30, opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.4");
+
+// Form Submit
+function submitSponsorship(form) {
+    const btn = form.querySelector('button');
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = 'Sending...';
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
+    
+    setTimeout(() => {
+        gsap.to(form, { 
+            opacity: 0, 
+            y: -20, 
+            duration: 0.4, 
+            onComplete: () => {
+                form.style.display = 'none';
+                const success = document.getElementById('sponsorSuccess');
+                success.classList.remove('hidden');
+                gsap.from(success, { opacity: 0, scale: 0.9, duration: 0.5, ease: "back.out(1.7)" });
+            }
+        });
+    }, 1500);
+}
+</script>
+</body>
+</html>
