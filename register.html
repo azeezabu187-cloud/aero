@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html class="dark" lang="en" style="scroll-behavior: smooth;">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AEROCREST 2026 | Register</title>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- GSAP for Cinematic Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+<!-- FONT: ROBOTO -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<!-- MOBILE RESPONSIVENESS CSS -->
+<link rel="stylesheet" href="mobile.css" media="screen and (max-width: 768px)">
+
+<script id="tailwind-config">
+tailwind.config = {
+darkMode: "class",
+theme: {
+extend: {
+colors: {
+"primary": "#c41e3a",
+"primary-dark": "#8b1111",
+"accent-mars": "#ff4500",
+"accent-gold": "#ff8c00",
+"background-dark": "#1a0500",
+},
+fontFamily: {
+"display": ["Roboto", "sans-serif"],
+"orbitron": ["Roboto", "sans-serif"],
+"sans": ["Roboto", "sans-serif"],
+},
+animation: {
+'float': 'float 6s ease-in-out infinite',
+'scanline': 'scanline 8s linear infinite',
+'glow-node': 'glowNode 2s ease-in-out infinite',
+'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+},
+keyframes: {
+float: {
+'0%, 100%': { transform: 'translateY(0px)' },
+'50%': { transform: 'translateY(-20px)' },
+},
+glowNode: {
+'0%, 100%': { boxShadow: '0 0 5px #c41e3a, 0 0 10px #c41e3a' },
+'50%': { boxShadow: '0 0 20px #ff4500, 0 0 40px #ff4500' },
+}
+}
+},
+},
+}
+</script>
+<style>
+body {
+font-family: 'Roboto', sans-serif;
+background-color: #1a0500;
+color: #ffffff;
+overflow-x: hidden;
+position: relative;
+}
+
+/* --- VIDEO & OVERLAY STYLES --- */
+#video-background-layer {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+z-index: -50;
+overflow: hidden;
+transform-origin: center center;
+will-change: transform; 
+}
+#bg-video {
+position: absolute;
+top: 50%; left: 50%;
+min-width: 100%; min-height: 100%;
+width: auto; height: auto;
+transform: translate(-50%, -50%);
+object-fit: cover;
+opacity: 0.6;
+}
+.cinematic-overlay {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: linear-gradient(180deg,
+rgba(26, 5, 0, 0.85) 0%,
+rgba(26, 5, 0, 0.4) 40%,
+rgba(26, 5, 0, 0.7) 80%,
+rgba(26, 5, 0, 1) 100%
+);
+z-index: -40;
+pointer-events: none;
+backdrop-filter: blur(1px);
+}
+.scanlines {
+position: fixed; top: 0; left: 0; w: 100%; h: 100%;
+background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+background-size: 100% 4px;
+z-index: -30;
+opacity: 0.3;
+pointer-events: none;
+}
+
+/* --- EXISTING STYLES --- */
+.mars-hud-bg {
+background: radial-gradient(circle at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 80%);
+}
+.glass-panel {
+backdrop-filter: blur(16px);
+border: 1px solid rgba(255, 69, 0, 0.2);
+background: rgba(45, 10, 5, 0.4);
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+.glow-text {
+text-shadow: 0 0 20px rgba(196, 30, 58, 0.8), 0 0 40px rgba(255, 69, 0, 0.4);
+}
+
+/* --- ANIMATION UTILITIES --- */
+.char-reveal { display: inline-block; opacity: 0; }
+.cursor-trail {
+position: fixed;
+width: 8px; height: 8px;
+background: #ff4500;
+border-radius: 50%;
+pointer-events: none;
+z-index: 9999;
+box-shadow: 0 0 10px #ff4500, 0 0 20px #c41e3a;
+transition: opacity 0.3s;
+}
+
+/* --- ADDED: FLOATING STARS & DOLLY ZOOM SUPPORT --- */
+#floating-stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -25; /* Behind content, in front of video */
+    pointer-events: none;
+    overflow: hidden;
+    transform-origin: center center;
+    will-change: transform;
+}
+.star-particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+    animation: 
+        floatStar 15s infinite linear alternate, 
+        twinkleStar 4s infinite ease-in-out;
+}
+@keyframes floatStar {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(var(--mx), var(--my)); }
+}
+@keyframes twinkleStar {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 0.9; transform: scale(1.2); }
+}
+
+/* --- UPDATED: PERFECT 3D SHAPES --- */
+
+.shape-lock-container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 5, 0, 0.85); /* Solid Lock Background */
+    border-top: 1px solid rgba(255,69,0,0.2);
+    border-bottom: 1px solid rgba(255,69,0,0.2);
+    perspective: 1200px;
+    position: relative;
+    z-index: 60;
+    backdrop-filter: blur(10px);
+}
+
+/* MIRROR FRAGMENTS */
+.mirror-shard {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,200,255,0.2));
+    border: 1px solid white;
+    box-shadow: 0 0 15px white;
+    backface-visibility: visible;
+    z-index: 100;
+    pointer-events: none;
+    transform-style: preserve-3d;
+}
+
+/* --- CUSTOM ASTRONAUT CURSOR --- */
+@media (pointer: fine) {
+    body,
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    .cursor-pointer {
+        cursor: url('Star Wars/astro-cursor.cur') 2 2, auto;
+    }
+}
+</style>
+</head>
+<body class="text-slate-100 selection:bg-primary selection:text-white">
+<!-- VIDEO BACKGROUND LAYER -->
+<div id="video-background-layer">
+<video id="bg-video" autoplay muted loop playsinline poster="">
+<source src="one.mp4" type="video/mp4">
+Your browser does not support HTML5 video.
+</video>
+</div>
+<!-- ATMOSPHERIC OVERLAYS -->
+<div class="cinematic-overlay"></div>
+<div class="scanlines"></div>
+<!-- ADDED: FLOATING STARS CONTAINER -->
+<div id="floating-stars"></div>
+
+<!-- PARTICLE SYSTEM CONTAINER -->
+<canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"></canvas>
+<!-- NAV BAR -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 nav-wrapper opacity-0">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<!-- LEFT: Logo Image -->
+<a href="index38.html" class="flex items-center space-x-4 rounded-full overflow-hidden bg-white/5" aria-label="AEROCREST 2026">
+    <div class="h-20 w-20 rounded-full bg-center bg-cover shadow-[0_0_20px_rgba(196,30,58,0.6)]" style="background-image: url('logooo.png');"></div>
+    <span class="sr-only">AEROCREST 2026</span>
+</a>
+<!-- CENTER: Links (Hidden on Mobile) -->
+    <div class="hidden md:flex space-x-8 items-center font-orbitron text-[10px] font-bold tracking-[0.2em] uppercase">
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="index38.html#mission">
+            <span class="relative z-10">Mission</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="index38.html#timeline">
+            <span class="relative z-10">Timeline</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="index38.html#challenges">
+            <span class="relative z-10">Challenges</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="index38.html#rewards">
+            <span class="relative z-10">Rewards</span>
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+        </a>
+    </div>
+
+    <!-- RIGHT: Register Button + College Logo -->
+    <div class="flex items-center gap-4">
+        <!-- ADDED: SPONSOR US BUTTON -->
+        <a href="sponsor.html" class="hidden md:block text-accent-gold font-bold font-orbitron text-xs tracking-widest hover:text-white transition-colors border border-accent-gold/50 hover:border-white px-6 py-2 rounded-full hover:shadow-[0_0_15px_rgba(255,140,0,0.5)]">
+            SPONSOR_US
+        </a>
+        
+        <button onclick="window.location.reload()" class="nav-cta bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg border border-white/10 hover:shadow-[0_0_20px_rgba(255,69,0,0.6)]">
+            Register
+        </button>
+        
+        <!-- NEW LOGO ADDITION -->
+        <a href="https://crescent.education/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity duration-300">
+            <img src="logo.png" alt="BS Crescent Institute" class="h-12 w-auto object-contain bg-white/5 rounded-md p-1 backdrop-blur-sm border border-white/10 hover:border-accent-gold transition-colors">
+        </a>
+    </div>
+</div>
+</nav>
+
+<!-- NEW: STRUCTURAL SPHERE LOCK FOR REGISTER -->
+<section id="register-gateway" class="shape-lock-container">
+    <div class="text-center mb-8 relative z-10">
+        <h3 class="text-4xl font-black text-primary font-orbitron uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(196,30,58,0.8)]">ENLISTMENT SECURED</h3>
+        <p class="text-sm text-accent-gold tracking-[0.5em] mt-2 font-bold animate-pulse">BREACH STRUCTURAL SHIELD</p>
+    </div>
+    
+    <!-- LARGE CRYSTAL SPHERE SCENE -->
+    <style>
+        .sphere-scene {
+            width: 50vmin; 
+            height: 50vmin;
+            perspective: 1500px;
+            cursor: pointer;
+            z-index: 50;
+            position: relative;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .sphere-scene:hover { transform: scale(1.05); }
+
+        .crystal-sphere {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotateSphere 15s infinite linear;
+            transition: filter 0.2s; /* Smooth glow transition */
+        }
+
+        /* Sphere Animation */
+        @keyframes rotateSphere {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+        }
+
+        /* Structural Rings */
+        .s-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 69, 0, 0.3);
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.2), inset 0 0 20px rgba(196, 30, 58, 0.1);
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05), transparent 60%);
+            backface-visibility: visible;
+        }
+
+        .s-ring:nth-child(1) { transform: rotateY(0deg); border-color: rgba(255, 140, 0, 0.6); }
+        .s-ring:nth-child(2) { transform: rotateY(60deg); }
+        .s-ring:nth-child(3) { transform: rotateY(120deg); }
+        .s-ring:nth-child(4) { transform: rotateX(90deg); border: 2px dashed rgba(255, 255, 255, 0.2); }
+        .s-ring:nth-child(5) { transform: rotateX(45deg); }
+        .s-ring:nth-child(6) { transform: rotateX(-45deg); }
+
+        /* Inner glowing core */
+        .s-core {
+            position: absolute;
+            top: 25%; left: 25%;
+            width: 50%; height: 50%;
+            background: radial-gradient(circle, #ff4500 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+            opacity: 0.8;
+            transform-style: preserve-3d;
+            animation: pulseCore 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseCore {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: 5%;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fadeHint 2s infinite;
+            pointer-events: none;
+        }
+        @keyframes fadeHint { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* Styling for the shards */
+        .mirror-shard {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,69,0,0.4));
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+            backface-visibility: hidden;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        /* The Flash Overlay */
+        .blast-flash {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+    </style>
+
+    <div class="sphere-scene" onclick="unlockRegister()">
+        <div class="crystal-sphere" id="sphereObj">
+            <div class="s-ring"></div>
+            <div class="s-ring"></div>
+            <div class="s-ring"></div>
+            <div class="s-ring"></div>
+            <div class="s-ring"></div>
+            <div class="s-ring"></div>
+            <div class="s-core"></div>
+        </div>
+        <div class="blast-flash"></div>
+    </div>
+    
+    <p class="click-hint">CLICK SPHERE TO OVERLOAD SHIELD</p>
+
+    <script>
+        function unlockRegister() {
+            const scene = document.querySelector('.sphere-scene');
+            const sphere = document.getElementById('sphereObj');
+            const container = document.getElementById('register-gateway');
+            const flash = document.querySelector('.blast-flash');
+            const hint = document.querySelector('.click-hint');
+
+            // Prevent double clicks
+            scene.onclick = null;
+            hint.style.opacity = 0;
+
+            // --- STEP 1: CHARGE UP (Anticipation) ---
+            // We make the sphere vibrate and turn bright white before exploding
+            const tl = gsap.timeline();
+
+            tl.to(sphere, {
+                scale: 1.1,
+                duration: 0.2,
+                filter: "brightness(3) contrast(2)", // Turn into pure light
+                ease: "power2.in"
+            })
+            // --- STEP 2: THE FLASH & SWAP (The seamless trick) ---
+            .to(flash, {
+                width: '150%',
+                height: '150%',
+                duration: 0.05,
+                background: '#fff',
+                opacity: 1,
+                onStart: () => {
+                    // This runs exactly when the screen is white
+                    createExplosion(scene); 
+                    sphere.style.opacity = 0; // Hide original sphere, don't remove yet
+                }
+            })
+            .to(flash, {
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+
+            // --- STEP 3: TRANSITION TO FORM ---
+            setTimeout(() => {
+                // Fade out the container holding the explosion
+                gsap.to(container, {
+                    opacity: 0,
+                    scale: 1.1,
+                    duration: 0.5,
+                    onComplete: () => {
+                        container.style.display = 'none';
+                        const phase3 = document.getElementById('locked-phase-3');
+                        if(phase3) {
+                            phase3.style.display = 'block';
+                            if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+                            gsap.from(phase3, { opacity: 0, y: 50, duration: 1, ease: "power3.out" });
+                        }
+                    }
+                });
+            }, 800);
+        }
+
+        function createExplosion(scene) {
+            const shardCount = 60; // Increased count
+            const rect = scene.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            for (let i = 0; i < shardCount; i++) {
+                const shard = document.createElement('div');
+                shard.classList.add('mirror-shard');
+                
+                // Random Shapes
+                const shapeType = Math.random();
+                if (shapeType > 0.6) shard.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)'; // Triangle
+                else if (shapeType > 0.3) shard.style.clipPath = 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)'; // Trapezoid
+                else shard.style.clipPath = 'polygon(0% 20%, 60% 20%, 100% 60%, 40% 100%)'; // Shard
+
+                // Sizing
+                const size = Math.random() * 40 + 10 + 'px';
+                shard.style.width = size; 
+                shard.style.height = size;
+                
+                // --- CRITICAL FOR SEAMLESSNESS ---
+                // Spawn shards RANDOMLY within the sphere's radius (approx 150px), not just at center
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * (rect.width * 0.4); // 40% of container width
+                const startX = centerX + Math.cos(angle) * radius;
+                const startY = centerY + Math.sin(angle) * radius;
+
+                shard.style.left = startX + 'px'; 
+                shard.style.top = startY + 'px';
+                
+                // Calculate trajectory: The further from center, the faster it goes
+                const dirX = (startX - centerX) / (rect.width/2); // -1 to 1
+                const dirY = (startY - centerY) / (rect.height/2);
+                
+                // Add some randomness to velocity
+                const velocity = Math.random() * 800 + 400;
+
+                scene.appendChild(shard);
+
+                gsap.to(shard, {
+                    x: dirX * velocity + (Math.random() - 0.5) * 200, // Explode outward based on position
+                    y: dirY * velocity + (Math.random() - 0.5) * 200,
+                    z: Math.random() * 500, // Fly towards camera
+                    rotationX: Math.random() * 720,
+                    rotationY: Math.random() * 720,
+                    opacity: 0,
+                    scale: 0,
+                    duration: Math.random() * 1 + 0.5,
+                    ease: "power3.out",
+                    onComplete: () => shard.remove()
+                });
+            }
+
+            // Add Shockwave Ring
+            const shockwave = document.createElement('div');
+            shockwave.style.cssText = `
+                position: absolute; top: 50%; left: 50%;
+                width: 100%; height: 100%;
+                border: 10px solid rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 55;
+                box-shadow: 0 0 80px rgba(255, 69, 0, 0.8);
+                background: transparent;
+            `;
+            scene.appendChild(shockwave);
+            
+            gsap.to(shockwave, {
+                width: '250%', // Expand larger
+                height: '250%',
+                borderWidth: '0px',
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power2.out',
+                onComplete: () => shockwave.remove()
+            });
+        }
+    </script>
+</section>
+
+<!-- LOCKED PHASE 3 WRAPPER -->
+<div id="locked-phase-3" style="display: none;">
+    <section class="py-32 px-6" id="register">
+        <div class="max-w-4xl mx-auto glass-panel p-12 rounded-[40px] border-t-8 border-primary relative overflow-hidden gs-reveal-up">
+            <div class="text-center mb-10">
+                <h2 class="text-5xl font-black font-orbitron italic mb-4 uppercase tracking-tighter">Enlist_Squad</h2>
+                <p class="text-accent-mars font-bold tracking-[0.3em] text-xs uppercase animate-pulse">Transmission window locks March 09</p>
+            </div>
+            <form id="missionForm" class="space-y-6 relative z-10" onsubmit="event.preventDefault();">
+                <div id="step-details" class="space-y-6 transition-all duration-500">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input required type="text" placeholder="TEAM NAME" class="w-full bg-black/40 border border-white/10 p-4 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+                        <input required type="text" placeholder="TEAM LEAD NAME" class="w-full bg-black/40 border border-white/10 p-4 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input required type="text" placeholder="COLLEGE NAME" class="w-full bg-black/40 border border-white/10 p-4 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+                        <input required type="tel" placeholder="PHONE NUMBER" class="w-full bg-black/40 border border-white/10 p-4 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+                    </div>
+                    <input required type="email" placeholder="PRIMARY EMAIL" class="w-full bg-black/40 border border-white/10 p-4 rounded-sm text-white font-bold uppercase tracking-widest text-sm focus:border-primary focus:bg-primary/5 outline-none transition-all">
+                    <div class="space-y-4 pt-4 border-t border-white/10">
+                        <p class="text-accent-gold text-xs font-orbitron tracking-widest">ADDITIONAL CREW DATA (OPTIONAL)</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="STUDENT 2 - COLLEGE" class="bg-black/40 border border-white/10 p-3 rounded-sm text-xs text-white uppercase focus:border-accent-gold outline-none">
+                            <input type="text" placeholder="STUDENT 3 - COLLEGE" class="bg-black/40 border border-white/10 p-3 rounded-sm text-xs text-white uppercase focus:border-accent-gold outline-none">
+                            <input type="text" placeholder="STUDENT 4 - COLLEGE" class="bg-black/40 border border-white/10 p-3 rounded-sm text-xs text-white uppercase focus:border-accent-gold outline-none">
+                            <input type="text" placeholder="STUDENT 5 - COLLEGE" class="bg-black/40 border border-white/10 p-3 rounded-sm text-xs text-white uppercase focus:border-accent-gold outline-none">
+                        </div>
+                    </div>
+                    <button type="button" onclick="nextStep('step-details', 'step-payment')" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 py-4 rounded-sm font-orbitron font-bold text-lg transition-all uppercase tracking-widest mt-4 group">
+                        Proceed to Payment <span class="material-icons text-sm ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </button>
+                </div>
+                <div id="step-payment" class="hidden opacity-0 transform translate-y-10 transition-all duration-500">
+                    <div class="bg-black/60 border border-accent-gold/30 rounded-2xl p-8 text-center max-w-md mx-auto relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-accent-gold animate-pulse"></div>
+                        <h3 class="font-orbitron text-2xl text-white mb-2">SECURE_LINK</h3>
+                        <p class="text-xs text-accent-gold mb-6 tracking-widest">SCAN UPI CODE TO INITIALIZE TRANSFER</p>
+                        <div class="bg-white p-4 rounded-lg inline-block mb-6 shadow-[0_0_30px_rgba(255,140,0,0.3)]"><img src="Upi.jpeg" alt="UPI QR" class="w-48 h-48"></div>
+                        <p class="text-[10px] text-gray-400 mb-6">Awaiting confirmation from banking node...</p>
+                        <button type="button" onclick="nextStep('step-payment', 'step-verify')" class="w-full bg-accent-gold hover:bg-orange-500 text-black py-4 rounded-sm font-orbitron font-black text-lg transition-all shadow-lg uppercase tracking-tighter">Done</button>
+                    </div>
+                </div>
+                <div id="step-verify" class="hidden opacity-0 transform translate-y-10 transition-all duration-500">
+                    <div class="bg-black/60 border border-primary/30 rounded-2xl p-8 max-w-md mx-auto">
+                        <h3 class="font-orbitron text-xl text-white mb-6 text-center">VERIFY_TRANSACTION</h3>
+                        <div class="space-y-6">
+                            <div><label class="text-[10px] text-primary font-bold tracking-widest mb-2 block">TRANSACTION ID (UTR)</label><input required type="text" placeholder="ENTER 12-DIGIT ID" class="w-full bg-black/80 border border-white/20 p-4 rounded-sm text-white font-mono text-sm focus:border-primary outline-none"></div>
+                            <div>
+                                <label class="text-[10px] text-primary font-bold tracking-widest mb-2 block">UPLOAD PROOF (SCREENSHOT)</label>
+                                <div class="relative border-2 border-dashed border-white/20 hover:border-primary/50 transition-colors rounded-lg p-6 text-center cursor-pointer group">
+                                    <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"><span class="material-icons text-3xl text-gray-500 group-hover:text-white transition-colors mb-2">cloud_upload</span><p class="text-xs text-gray-400 group-hover:text-white font-orbitron">CLICK TO UPLOAD EVIDENCE</p>
+                                </div>
+                            </div>
+                            <button type="submit" onclick="submitRegistration(this)" class="w-full bg-primary hover:bg-accent-mars py-6 rounded-sm font-orbitron font-black text-2xl transition-all shadow-xl uppercase tracking-tighter relative overflow-hidden group mt-4"><span class="relative z-10">Final Register</span><div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 skew-x-12"></div></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="step-success" class="hidden opacity-0 transform translate-y-10 transition-all duration-500 text-center">
+                    <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.4)]"><span class="material-icons text-4xl text-green-500">check_circle</span></div>
+                    <h3 class="font-orbitron text-3xl text-white mb-2">SQUAD_ENLISTED</h3><p class="text-gray-400 mb-8 font-display">Mission parameters synced. Welcome to the roster.</p>
+                    <a href="https://chat.whatsapp.com/" target="_blank" class="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-8 py-4 rounded-full font-bold font-orbitron tracking-widest transition-all transform hover:scale-105 shadow-lg"><span class="material-icons">groups</span>Join WhatsApp Community</a>
+                </div>
+            </form>
+        </div>
+        <script>
+            function nextStep(c,n){const C=document.getElementById(c),N=document.getElementById(n);if(c==='step-details'){const I=C.querySelectorAll('input[required]');let v=true;I.forEach(i=>{if(!i.value){i.style.borderColor='#c41e3a';v=false}else{i.style.borderColor='rgba(255,255,255,0.1)'}});if(!v)return}gsap.to(C,{opacity:0,y:-20,duration:0.3,onComplete:()=>{C.classList.add('hidden');N.classList.remove('hidden');gsap.fromTo(N,{opacity:0,y:20},{opacity:1,y:0,duration:0.5,ease:"power2.out"})}})}
+            function submitRegistration(b){b.innerHTML='<span class="animate-pulse">VERIFYING DATA...</span>';gsap.to(b,{x:[-2,2,-2,2,0],duration:0.3});setTimeout(()=>{const V=document.getElementById('step-verify'),S=document.getElementById('step-success');gsap.to(V,{opacity:0,y:-20,duration:0.3,onComplete:()=>{V.classList.add('hidden');S.classList.remove('hidden');gsap.fromTo(S,{opacity:0,y:20},{opacity:1,y:0,duration:0.5,ease:"back.out(1.7)"})}})},2000)}
+        </script>
+    </section>
+
+    <section class="py-32 px-6" id="faq">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-center text-5xl font-black font-orbitron mb-16 italic uppercase tracking-tighter gs-reveal-up">Mission_Intel</h2>
+            <div class="glass-panel rounded-2xl p-4 md:p-8 space-y-4 gs-reveal-up">
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">What is the required squad size?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Mission protocols mandate a minimum of 2 and a maximum of 4 colonists per squad. Solo missions are not authorized for this simulation.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">Is there an enlistment fee?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Negative. Enlistment for AEROCREST 2026 is completely free of charge. Access is open to all qualified cadets.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">Who is eligible to participate?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Any undergraduate or postgraduate student with a valid university ID card is eligible to join the mission. Interdisciplinary squads are encouraged.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">Is this a remote or on-site mission?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Round I is a virtual submission. Finalists must deploy to BSA Crescent Auditorium on March 23, 2026, for the live hackathon.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">Do we need coding or CAD skills?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">While not mandatory, proficiency in CAD (for habitat design) or simulation software will significantly enhance your mission success probability.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">What constitutes the Final Submission?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Squads must submit a 10-page technical report and present their solution to the Martian Council (Judges) on deployment day.</div></div></div>
+                <div class="faq-item border border-white/10 rounded-lg overflow-hidden transition-all duration-300 hover:border-accent-mars/50"><button class="faq-toggle w-full flex justify-between items-center p-6 bg-black/20 hover:bg-white/5 transition-colors text-left group"><span class="font-orbitron font-bold text-white text-lg">How do I contact Mission Control?</span><span class="material-icons text-accent-gold transition-transform duration-300 group-hover:rotate-90">add</span></button><div class="faq-content h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-400 leading-relaxed border-t border-white/5">Transmit inquiries to support@aerocrest.edu or utilize the live comms channel on our social media handles.</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center relative z-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <span class="text-xl font-bold tracking-tighter text-white font-orbitron uppercase">AEROCREST <span class="text-primary">2026</span></span>
+            <p class="text-gray-500 font-bold uppercase text-[9px] tracking-[0.4em] hover:text-white transition-colors">BSA Crescent Aerospace © 2026 // Nominal Ops.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// --- PARTICLE SYSTEM (Space Dust) ---
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let width, height;
+let particles = [];
+
+function resize() {
+width = canvas.width = window.innerWidth;
+height = canvas.height = window.innerHeight;
+}
+
+class Particle {
+constructor() {
+this.x = Math.random() * width;
+this.y = Math.random() * height;
+this.size = Math.random() * 2;
+this.speedY = Math.random() * 0.5 + 0.1;
+this.opacity = Math.random() * 0.5 + 0.1;
+}
+update() {
+this.y -= this.speedY;
+if (this.y < 0) this.y = height;
+}
+draw() {
+ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+ctx.beginPath();
+ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+ctx.fill();
+}
+}
+
+function initParticles() {
+for(let i=0; i<100; i++) particles.push(new Particle());
+}
+function animateParticles() {
+ctx.clearRect(0,0,width,height);
+particles.forEach(p => { p.update(); p.draw(); });
+requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', resize);
+resize();
+initParticles();
+animateParticles();
+
+// --- ANIMATIONS ---
+
+// 1. Hero Reveal Sequence (Adapted for Nav Only)
+const tl = gsap.timeline();
+tl.to(".nav-wrapper", { opacity: 1, duration: 1, ease: "power2.out" });
+
+// 8. Register Form
+gsap.from(".gs-reveal-up", {
+scrollTrigger: { trigger: "#register", start: "top 75%" },
+y: 50, opacity: 0, duration: 1, ease: "power2.out"
+});
+
+// Mouse Trail Effect
+document.addEventListener('mousemove', (e) => {
+const trail = document.createElement('div');
+trail.className = 'cursor-trail';
+trail.style.left = e.clientX + 'px';
+trail.style.top = e.clientY + 'px';
+document.body.appendChild(trail);
+
+setTimeout(() => {
+trail.style.opacity = '0';
+trail.style.transform = 'scale(0)';
+}, 10);
+setTimeout(() => trail.remove(), 300);
+});
+
+// Existing Form Submission Logic
+document.getElementById('missionForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const btn = e.target.querySelector('button');
+const originalText = btn.innerHTML;
+btn.innerHTML = '<span class="animate-pulse">TRANSMITTING TO ORBITER...</span>';
+
+// GSAP shake effect on button
+gsap.to(btn, { x: [-2, 2, -2, 2, 0], duration: 0.3 });
+
+setTimeout(() => {
+alert("TRANSMISSION SUCCESSFUL. MISSION PARAMETERS SYNCED.");
+btn.innerHTML = "SYNC_COMPLETE";
+btn.style.background = "#ff8c00";
+}, 2000);
+});
+
+/* --- ADDED: FLOATING STARS & DOLLY ZOOM LOGIC --- */
+(function addVisualEffects() {
+    // 1. Generate Floating Stars
+    const starContainer = document.getElementById('floating-stars');
+    const starCount = 60; // Number of stars
+
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star-particle');
+        
+        // Random Position
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        
+        // Random Size
+        const size = Math.random() * 3 + 1 + 'px';
+        star.style.width = size;
+        star.style.height = size;
+
+        // Random Float Direction (CSS Var)
+        const moveX = (Math.random() * 200 - 100) + 'px';
+        const moveY = (Math.random() * 200 - 100) + 'px';
+        star.style.setProperty('--mx', moveX);
+        star.style.setProperty('--my', moveY);
+
+        // Random Delays
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 10 + 10) + 's'; // 10-20s duration
+        
+        starContainer.appendChild(star);
+    }
+
+    // 2. Dolly Zoom Effect (Background Scale on Scroll)
+    // We target the video layer AND the stars layer for depth
+    gsap.to(["#video-background-layer", "#floating-stars"], {
+        scale: 1.15, // Subtle zoom in
+        ease: "none",
+        scrollTrigger: {
+            trigger: "body",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1 // Smooth scrubbing linked to scrollbar
+        }
+    });
+})();
+</script>
+<!-- FAQ ACCORDION LOGIC -->
+<script>
+document.querySelectorAll('.faq-toggle').forEach(button => {
+button.addEventListener('click', () => {
+const content = button.nextElementSibling;
+const icon = button.querySelector('.material-icons');
+
+// Close all other FAQs
+document.querySelectorAll('.faq-content').forEach(otherContent => {
+if (otherContent !== content) {
+otherContent.style.height = '0';
+otherContent.previousElementSibling.querySelector('.material-icons').innerText = 'add';
+otherContent.previousElementSibling.querySelector('.material-icons').style.transform = 'rotate(0deg)';
+}
+});
+
+// Toggle current
+if (content.style.height === '0px' || !content.style.height) {
+content.style.height = content.scrollHeight + 'px';
+icon.innerText = 'remove';
+icon.style.transform = 'rotate(180deg)';
+} else {
+content.style.height = '0';
+icon.innerText = 'add';
+icon.style.transform = 'rotate(0deg)';
+}
+});
+});
+</script>
+</body>
+</html>
