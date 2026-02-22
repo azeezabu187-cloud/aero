@@ -1,385 +1,363 @@
 @media screen and (max-width: 768px) {
+
     /* =========================================
-       1. GLOBAL LAYOUT & TYPOGRAPHY
+       1. GLOBAL & VIDEO RESET
        ========================================= */
-    body, html {
-        overflow-x: hidden;
+    html, body {
+        overflow-x: hidden !important;
         width: 100%;
         font-size: 14px;
+        -webkit-text-size-adjust: 100%;
     }
 
-    section {
-        padding-top: 3rem !important;
-        padding-bottom: 3rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        overflow: hidden; /* Prevents horizontal scroll from animations */
-    }
-
-    /* Headings */
-    .hero-title {
-        font-size: 3rem !important;
-        line-height: 1.1;
-    }
-
-    .hero-title span.text-transparent {
-        font-size: 2.2rem !important;
-        display: block;
-        margin-top: 0.5rem;
-    }
-
-    .hero-subtitle {
-        font-size: 0.9rem !important;
-        margin-bottom: 2rem !important;
-        padding: 0 1rem;
-        line-height: 1.6;
-    }
-
-    h2.text-7xl, .text-7xl {
-        font-size: 2.5rem !important;
-        line-height: 1.1 !important;
-        word-wrap: break-word;
-    }
-
-    h2.text-5xl, .text-5xl {
-        font-size: 2rem !important;
-        margin-bottom: 1.5rem !important;
+    /* Fix Background Video Sizing */
+    #video-background-layer, 
+    #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh; /* Fallback */
+        height: 100dvh;
+        object-fit: cover;
+        z-index: -50;
     }
 
     /* =========================================
-       2. NAVIGATION & HERO
+       2. NAVBAR
        ========================================= */
-    .nav-wrapper .max-w-7xl {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        height: auto !important; /* Allow height to grow for stacked items */
-        min-height: 5rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-    
-    .nav-cta {
-        padding: 0.5rem 1rem !important;
-        font-size: 0.75rem !important;
+    nav.nav-wrapper {
+        height: auto !important;
+        padding: 10px 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
     }
 
-    /* Stack buttons vertically */
-    .hero-buttons {
-        flex-direction: column !important;
-        gap: 1rem !important;
-        width: 100% !important;
+    nav .max-w-7xl {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
     }
 
-    .hero-buttons button {
-        width: 100% !important;
-        padding: 1rem !important;
-        font-size: 1rem !important;
+    /* Left Logo */
+    nav a[aria-label="AEROCREST 2026"] {
+        transform: scale(0.8);
+        margin-left: -10px;
     }
 
-    /* FORCE SPONSOR BUTTON VISIBILITY ON MOBILE */
-    nav .hidden.md\:block {
-        display: block !important;
-        font-size: 0.65rem !important; /* Smaller text for mobile */
-        padding: 0.4rem 0.8rem !important;
-        white-space: nowrap;
-    }
-
-    /* Adjust the right-side container in nav to fit items */
+    /* Right Group */
     nav .flex.items-center.gap-4 {
-        gap: 0.5rem !important;
+        gap: 8px;
+        display: flex;
+        align-items: center;
     }
-    
-    /* Hide the college logo on very small screens if needed to save space, 
-       or keep it small */
+
+    nav a[href="sponsor.html"] {
+        display: block !important;
+        padding: 6px 10px;
+        font-size: 9px;
+        border: 1px solid rgba(255, 140, 0, 0.5);
+    }
+
+    nav button.nav-cta, nav a.bg-slate-900 {
+        padding: 6px 12px;
+        font-size: 10px;
+    }
+
     nav img[alt="BS Crescent Institute"] {
-        height: 2rem !important;
-        width: auto !important;
+        height: 28px;
+        width: auto;
     }
+
+    nav .hidden.md\:flex { display: none !important; }
 
     /* =========================================
-       3. 3D CUBE LOCK (Mission Gateway)
+       3. HERO & 3D
        ========================================= */
-    .cube-lock-container {
-        --cube-size: 160px !important; /* Smaller cube for mobile */
-    }
+    #cinematic-hero { min-height: 100dvh; padding: 0 20px; }
+    .cine-title-primary { font-size: 12vw !important; margin-top: 20px; }
+    .cine-actions { flex-direction: column; width: 100%; gap: 15px; }
+    .cine-actions button { width: 100%; }
     
-    .cube-scene {
-        width: 160px !important;
-        height: 160px !important;
-    }
-    
-    .cube-face {
-        width: 160px !important;
-        height: 160px !important;
-        font-size: 24px !important;
-        border-width: 1px !important;
-    }
-
-    /* Recalculate 3D transforms for 160px size (TranslateZ = 80px) */
-    .cube-face.front  { transform: rotateY(0deg) translateZ(80px) !important; }
-    .cube-face.back   { transform: rotateY(180deg) translateZ(80px) !important; }
-    .cube-face.right  { transform: rotateY(90deg) translateZ(80px) !important; }
-    .cube-face.left   { transform: rotateY(-90deg) translateZ(80px) !important; }
-    .cube-face.top    { transform: rotateX(90deg) translateZ(80px) !important; }
-    .cube-face.bottom { transform: rotateX(-90deg) translateZ(80px) !important; }
+    .cube-lock-container, .shape-lock-container { height: 100vh; }
+    .cube-scene, .tetra-scene { transform: scale(0.6); }
+    .sphere-scene { width: 90vw; height: 90vw; }
 
     /* =========================================
-       4. MISSION DASHBOARD (Countdown)
+       4. MISSION SECTION (COUNTDOWN FIXED)
        ========================================= */
-    #mission .flex.flex-col.md\:flex-row {
-        align-items: center !important;
-        text-align: center !important;
-        gap: 2rem !important;
+    #mission {
+        padding-top: 80px !important;
+        padding-bottom: 40px !important;
+        padding-left: 15px;
+        padding-right: 15px;
+        height: auto !important;
     }
-    
-    #mission .text-left {
-        text-align: center !important;
+
+    #mission .flex-col.md\:flex-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    /* Mission Title */
+    #mission h2 {
+        font-size: 3rem !important;
+        line-height: 1;
+        text-align: center;
         width: 100%;
     }
 
-    /* Countdown Grid */
+    #mission p { text-align: center; }
+
+    /* --- COUNTDOWN: ONE LINE FIX --- */
     #mission .flex.gap-4 {
+        display: flex !important;
+        flex-direction: row !important; /* Force row layout */
+        flex-wrap: nowrap !important;   /* No wrapping */
+        justify-content: space-between;
+        gap: 5px !important;
         width: 100%;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.5rem !important;
     }
 
     .countdown-box {
-        min-width: auto !important;
+        min-width: 0 !important;
+        flex: 1; /* Distribute space evenly */
         padding: 8px 2px !important;
+        height: auto;
     }
 
     .countdown-val {
-        font-size: 1.2rem !important;
+        font-size: 1.3rem !important; /* Adjusted to ensure 4 fit */
+        line-height: 1.2;
     }
 
     .countdown-label {
-        font-size: 0.4rem !important;
+        font-size: 0.55rem !important; /* Tiny labels */
+    }
+
+    /* Mission Content */
+    #mission .grid.lg\:grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 
     /* =========================================
-       5. TIMELINE
+       5. TIMELINE (Vertical List)
        ========================================= */
-    .timeline-container {
-        padding: 20px 0 !important;
+    .timeline-section {
+        height: auto !important; 
+        min-height: auto !important;
+        display: block !important;
+        padding: 60px 20px !important;
+        position: relative !important;
     }
-    .timeline-item {
-        margin-bottom: 40px !important;
-    }
-    .timeline-line {
-        left: 20px !important;
-    }
-    .timeline-node {
-        left: 20px !important;
+
+    .timeline-horizontal {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
         transform: none !important;
-    }
-    
-    /* Force text alignment to left for all items */
-    .timeline-content {
-        width: 80% !important;
-        margin-left: 50px !important;
-        text-align: left !important;
+        gap: 0 !important;
         padding: 0 !important;
     }
-    
-    /* Override the reverse flex for right-sided items */
-    .timeline-item.flex-row-reverse {
-        flex-direction: row !important;
-    }
-    .timeline-item.flex-row-reverse .timeline-content {
-        text-align: left !important;
-        padding-left: 0 !important;
-    }
 
-    /* =========================================
-       6. CHALLENGES & TETRAHEDRON
-       ========================================= */
-    #challenges .grid {
-        grid-template-columns: 1fr !important;
-        gap: 1.5rem !important;
-    }
-
-    .tetra-scene {
-        transform: scale(0.6) !important;
-        margin: -40px 0 !important;
-    }
-    
-    /* =========================================
-       7. REWARDS SECTION (FIXED ANIMATION)
-       ========================================= */
-    /* Adjust wrapper to allow scrolling space */
-    .stack-wrapper {
-        padding-bottom: 50px !important;
-    }
-
-    /* 
-       The Sticky Logic:
-       On mobile, we make the cards sticky but with offsets so they 
-       stack visibly like a deck of cards.
-    */
-    .stack-card {
-        position: sticky !important;
-        display: block !important; /* Fix flex issue */
-        margin-bottom: 20px !important;
-        /* Default Top */
-        top: 80px !important;
-        z-index: 10;
-    }
-
-    /* Stagger the "stickiness" so they stack neatly */
-    .stack-card:nth-of-type(1) { top: 90px !important; z-index: 10; }
-    .stack-card:nth-of-type(2) { top: 110px !important; z-index: 20; }
-    .stack-card:nth-of-type(3) { top: 130px !important; z-index: 30; }
-
-    /* The Inner Card Design for Mobile */
-    .stack-card > div {
-        /* Remove fixed width/height from desktop */
+    .h-timeline-item {
         width: 100% !important;
-        height: auto !important;
-        min-height: auto !important;
-        
-        /* Layout */
-        flex-direction: column !important;
-        align-items: center !important;
+        flex: none !important;
+        padding-bottom: 40px;
+        position: relative;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .h-timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 10px;
+        bottom: 0;
+        width: 2px;
+        background: rgba(196, 30, 58, 0.3);
+    }
+    .h-timeline-item:last-child::before,
+    .h-timeline-item:first-child::before { display: none; }
+
+    .h-timeline-content {
+        border-left: none !important;
+        padding-left: 40px;
+        margin-left: 0;
+    }
+
+    .h-timeline-node {
+        left: 0 !important;
+        top: 5px !important;
+    }
+
+    /* Timeline Header */
+    .h-timeline-item:first-child h2 {
+        font-size: 2.5rem !important;
+        text-align: center;
+        width: 100%;
+        padding-bottom: 20px;
+    }
+
+    /* =========================================
+       6. REWARDS (Title & Cards Fit)
+       ========================================= */
+    /* Sticky Container Reset */
+    #rewards .sticky {
+        position: relative !important;
+        top: auto !important;
+        padding: 20px 0 !important;
+        background: transparent !important;
+        z-index: 1;
+    }
+
+    /* Rewards Title Fit */
+    #rewards h2 {
+        font-size: 2.5rem !important;
         text-align: center !important;
-        gap: 1rem !important;
-        padding: 2rem 1.5rem !important;
-        
-        /* Background needs to be opaque on mobile to hide cards behind */
-        background: #1a0500 !important; 
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.5) !important;
-    }
-
-    /* Typography inside Rewards */
-    .stack-card .text-8xl {
-        font-size: 3rem !important;
-        line-height: 1;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stack-card h3 {
-        font-size: 1.8rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-    
-    .stack-card p.text-2xl {
-        font-size: 0.95rem !important;
-        line-height: 1.5;
-        color: #ccc !important;
-        margin-bottom: 1rem !important;
-    }
-
-    .stack-card .flex.gap-4 {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    /* =========================================
-       8. GALLERY
-       ========================================= */
-    #gallery .grid {
-        display: flex !important;
-        flex-direction: column;
-        gap: 10px !important;
-    }
-    
-    #gallery img {
-        height: 200px !important;
         width: 100% !important;
-        object-fit: cover;
-    }
-    
-    /* Reset Grid Spans */
-    #gallery .col-span-2, #gallery .row-span-2 {
-        grid-column: auto !important;
-        grid-row: auto !important;
+        white-space: normal !important;
+        margin-bottom: 20px !important;
     }
 
-    /* =========================================
-       9. TEAM & SPEAKERS
-       ========================================= */
-    #team .flex-wrap {
-        gap: 1.5rem !important;
+    .stack-wrapper {
+        padding-bottom: 50px;
+        padding-top: 0 !important;
     }
-    
-    /* Center the cards */
-    #team .glass-panel {
-        width: 100% !important;
-        max-width: 280px !important;
+
+    /* Card Layout */
+    .stack-card {
+        position: relative !important;
+        top: 0 !important;
+        margin-bottom: 30px;
+        display: block !important;
+    }
+
+    .stack-card > div {
+        width: 90% !important;
         margin: 0 auto;
+        height: auto !important;
+        flex-direction: column;
+        padding: 30px 20px !important;
+        text-align: center;
+        border-radius: 20px;
     }
 
-    #speakers .grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* =========================================
-       10. SPHERE LOCK
-       ========================================= */
-    .sphere-scene {
-        width: 80vmin !important;
-        height: 80vmin !important;
-    }
-    
-    .shape-lock-container h3 {
-        font-size: 1.5rem !important;
-        padding: 0 1rem;
-    }
+    .stack-card .text-8xl { font-size: 3.5rem !important; margin-bottom: 10px; }
+    .stack-card h3 { font-size: 1.8rem !important; }
+    .stack-card p { font-size: 1rem !important; }
+    .stack-card .flex { flex-wrap: wrap; justify-content: center; gap: 10px; }
 
     /* =========================================
-       11. REGISTRATION FORM
+       7. SECTION TITLES & LAYOUTS (MOMENTS, COUNCIL, REGISTER)
        ========================================= */
-    #register .glass-panel {
-        padding: 1.5rem !important;
-        border-radius: 15px !important;
-    }
     
-    /* Single Column Form */
-    #register .grid.md\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-    }
-    
-    #register input {
+    /* Universal Title Fix */
+    #gallery h2, 
+    #team h2, 
+    #speakers h2, 
+    #challenges h2,
+    #register h2 {
+        font-size: 2.2rem !important; /* Forces all big titles to fit */
+        line-height: 1.1 !important;
+        text-align: center !important;
         width: 100% !important;
-        font-size: 0.9rem !important;
-        padding: 1rem !important;
+        margin: 0 auto 30px auto !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        padding: 0 10px;
     }
-    
-    #register button {
-        font-size: 1rem !important;
-        padding: 1rem !important;
+
+    /* Specific fix for Register.html Form Container */
+    #register .glass-panel {
+        padding: 30px 20px !important;
+        width: 100% !important;
     }
+
+    /* Gallery Grid */
+    #gallery .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        grid-auto-rows: 120px;
+    }
+    #gallery .col-span-2 { grid-column: span 2; }
+    #gallery .row-span-2 { grid-row: span 2; }
+
+    /* Team/Leadership */
+    #team .flex-wrap { gap: 30px; justify-content: center; }
+    #team .glass-panel { width: 100% !important; max-width: 300px; margin: 0 auto; }
+    #team .h-\[1px\] { display: none; }
+
+    /* Martian Council */
+    #speakers .grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    /* Challenges */
+    .challenges-grid { grid-template-columns: 1fr; gap: 30px; padding: 0 10px; }
+    .challenge-card { min-height: auto; }
+
+    /* FAQ */
+    #faq .glass-panel { padding: 20px !important; }
+    #faq h2 { font-size: 2.2rem !important; }
+
+    /* Footer */
+    footer .flex-col { gap: 20px; }
 
     /* =========================================
-       12. FOOTER & MISC
+       8. MISSION BRIEFING POPUP FIX
        ========================================= */
-    .faq-toggle {
-        padding: 1rem !important;
-    }
     
-    .faq-toggle span.font-orbitron {
-        font-size: 0.85rem !important;
-        padding-right: 10px;
-        line-height: 1.4;
+    /* Adjust overall popup padding */
+    #mission-briefing {
+        padding: 15px !important;
     }
 
-    footer .flex-col {
-        gap: 1rem !important;
-    }
-    
-    /* Disable Hover transforms on touch */
-    .fan-container:hover .card-left, 
-    .fan-container:hover .card-right {
-        transform: none !important;
+    /* Fix header alignment to prevent button from squishing */
+    #mission-briefing .flex.justify-between.items-start {
+        align-items: center !important;
+        gap: 15px;
     }
 
+    /* Scale down the title so it fits */
+    #brief-title {
+        font-size: 1.4rem !important; 
+        line-height: 1.2 !important;
+        word-wrap: break-word !important;
+        white-space: normal !important;
+    }
+
+    /* Make Close Button (X) larger, highly visible, and tappable */
+    #mission-briefing button[onclick="closeBriefing()"] {
+        min-width: 44px !important; /* Easy tap target */
+        height: 44px !important;
+        background: rgba(196, 30, 58, 0.2) !important;
+        border: 1px solid rgba(196, 30, 58, 0.6) !important;
+        border-radius: 8px;
+        flex-shrink: 0; /* Prevents title from squeezing the button */
+    }
+
+    /* Make the X icon itself bright white and larger */
+    #mission-briefing button[onclick="closeBriefing()"] .material-icons {
+        font-size: 1.8rem !important; 
+        color: #ffffff !important;    
+        opacity: 1 !important;
+    }
     /* =========================================
-       13. SPONSOR PAGE SPECIFICS
+       9. PREVIOUS EVENTS TITLE FIX (ONE LINE)
        ========================================= */
-    .sponsor-page-container {
-        padding-top: 6rem !important; /* Ensure content clears fixed navbar on mobile */
+    #gallery h2 {
+        font-size: 7.5vw !important; /* Smaller percentage to fit the wide Orbitron font */
+        letter-spacing: -1px !important; /* Pull letters slightly tighter */
+        white-space: nowrap !important; /* Forces it to NEVER break into two lines */
+        word-wrap: normal !important;
+        padding: 0 !important;
     }
 }
