@@ -1,1380 +1,2652 @@
 <!DOCTYPE html>
 <html class="dark" lang="en" style="scroll-behavior: smooth;">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AEROCREST 2026 | Mission Control</title>
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- GSAP for Cinematic Animations -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-<!-- FONT: ROBOTO -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<!-- MOBILE RESPONSIVENESS CSS -->
-<link rel="stylesheet" href="mobile.css" media="screen and (max-width: 768px)">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEROCREST 2026 | Mission Control</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- GSAP for Cinematic Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <!-- FONT: MISSION CONTROL STACK -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- MOBILE RESPONSIVENESS CSS -->
+    <link rel="stylesheet" href="mobile.css" media="screen and (max-width: 768px)">
 
-<script id="tailwind-config">
-tailwind.config = {
-darkMode: "class",
-theme: {
-extend: {
-colors: {
-"primary": "#c41e3a",
-"primary-dark": "#8b1111",
-"accent-mars": "#ff4500",
-"accent-gold": "#ff8c00",
-"background-dark": "#1a0500",
-},
-fontFamily: {
-"display": ["Roboto", "sans-serif"],
-"orbitron": ["Roboto", "sans-serif"],
-"sans": ["Roboto", "sans-serif"],
-},
-animation: {
-'float': 'float 6s ease-in-out infinite',
-'scanline': 'scanline 8s linear infinite',
-'glow-node': 'glowNode 2s ease-in-out infinite',
-'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-},
-keyframes: {
-float: {
-'0%, 100%': { transform: 'translateY(0px)' },
-'50%': { transform: 'translateY(-20px)' },
-},
-glowNode: {
-'0%, 100%': { boxShadow: '0 0 5px #c41e3a, 0 0 10px #c41e3a' },
-'50%': { boxShadow: '0 0 20px #ff4500, 0 0 40px #ff4500' },
-}
-}
-},
-},
-}
-</script>
-<style>
-body {
-font-family: 'Roboto', sans-serif;
-background-color: #1a0500;
-color: #ffffff;
-overflow-x: hidden;
-position: relative;
-}
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c41e3a",
+                        "primary-dark": "#8b1111",
+                        "accent-mars": "#ff4500",
+                        "accent-gold": "#ff8c00",
+                        "accent-cyan": "#00f3ff",
+                        "oxide-copper": "#e67e22",
+                        "background-dark": "#0a0200",
+                    },
+                    fontFamily: {
+                        "display": ["Orbitron", "sans-serif"],
+                        "modern": ["Inter", "sans-serif"],
+                        "mono": ["Share Tech Mono", "monospace"],
+                        "orbitron": ["Orbitron", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                        'glow-node': 'glowNode 2s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glowNode: {
+                            '0%, 100%': { boxShadow: '0 0 5px #c41e3a, 0 0 10px #c41e3a' },
+                            '50%': { boxShadow: '0 0 20px #ff4500, 0 0 40px #ff4500' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0200;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-/* --- VIDEO & OVERLAY STYLES --- */
-#video-background-layer {
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-z-index: -50;
-overflow: hidden;
-transform-origin: center center;
-will-change: transform; 
-}
-#bg-video {
-position: absolute;
-top: 50%; left: 50%;
-min-width: 100%; min-height: 100%;
-width: auto; height: auto;
-transform: translate(-50%, -50%);
-object-fit: cover;
-opacity: 0.6;
-}
-.cinematic-overlay {
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-background: linear-gradient(180deg,
-rgba(26, 5, 0, 0.85) 0%,
-rgba(26, 5, 0, 0.4) 40%,
-rgba(26, 5, 0, 0.7) 80%,
-rgba(26, 5, 0, 1) 100%
-);
-z-index: -40;
-pointer-events: none;
-backdrop-filter: blur(1px);
-}
-.scanlines {
-position: fixed; top: 0; left: 0; w: 100%; h: 100%;
-background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-background-size: 100% 4px;
-z-index: -30;
-opacity: 0.3;
-pointer-events: none;
-}
+        /* --- VIDEO & OVERLAY STYLES --- */
+        #video-background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -50;
+            overflow: hidden;
+            transform-origin: center center;
+            will-change: transform;
+        }
 
-/* --- EXISTING STYLES --- */
-.mars-hud-bg {
-background: radial-gradient(circle at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 80%);
-}
-.glass-panel {
-backdrop-filter: blur(16px);
-border: 1px solid rgba(255, 69, 0, 0.2);
-background: rgba(45, 10, 5, 0.4);
-transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-.glow-text {
-text-shadow: 0 0 20px rgba(196, 30, 58, 0.8), 0 0 40px rgba(255, 69, 0, 0.4);
-}
+        #bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.6;
+        }
 
-/* VERTICAL TIMELINE STYLES */
-.timeline-container { position: relative; padding: 40px 0; }
-.timeline-line {
-position: absolute;
-left: 50%;
-transform: translateX(-50%);
-width: 1px;
-height: 0%;
-background: rgba(255, 69, 0, 0.5);
-box-shadow: 0 0 10px #ff4500;
-}
-.timeline-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-width: 100%;
-margin-bottom: 80px;
-opacity: 0;
-}
-.timeline-content { width: 42%; }
-.timeline-node {
-position: absolute;
-left: 50%; transform: translateX(-50%) scale(0);
-width: 32px; height: 32px;
-background: #1a0500; border: 3px solid #c41e3a;
-border-radius: 50%; z-index: 10;
-display: flex; align-items: center; justify-content: center;
-}
-.node-dot { width: 8px; height: 8px; background: white; border-radius: 50%; }
+        .cinematic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg,
+                    rgba(26, 5, 0, 0.85) 0%,
+                    rgba(26, 5, 0, 0.4) 40%,
+                    rgba(26, 5, 0, 0.7) 80%,
+                    rgba(26, 5, 0, 1) 100%);
+            z-index: -40;
+            pointer-events: none;
+            backdrop-filter: blur(1px);
+        }
 
-/* REWARDS FAN EFFECT */
-.fan-card {
-transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s;
-}
-.fan-container:hover .card-left { transform: rotate(-15deg) translateX(-180px) scale(0.9); }
-.fan-container:hover .card-right { transform: rotate(15deg) translateX(180px) scale(0.9); }
-.fan-container:hover .card-center { transform: translateY(-20px) scale(1.05); z-index: 50; }
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            w: 100%;
+            h: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1));
+            background-size: 100% 4px;
+            z-index: -30;
+            opacity: 0.3;
+            pointer-events: none;
+        }
 
-/* --- REWARDS STACK EFFECT (FIXED) --- */
-.stack-wrapper {
-    position: relative;
-    padding-bottom: 100px;
-}
-.stack-card {
-    position: sticky;
-    top: 200px; /* Offset to sit below the sticky title */
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px; /* Space between cards */
-    transition: transform 0.3s ease-out;
-}
-.glass-morphism {
-    backdrop-filter: blur(20px);
-    /* Darker, opaque background so cards hide the ones behind them */
-    background: rgba(26, 5, 0, 0.9); 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.stack-card:hover .glass-morphism {
-    transform: translateY(-10px);
-    border-color: #ff8c00;
-}
+        /* --- EXISTING STYLES --- */
+        .mars-hud-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 80%);
+        }
 
-@media (max-width: 768px) {
-.timeline-line { left: 20px; }
-.timeline-node { left: 20px; transform: none; }
-.timeline-content { width: 85%; margin-left: 50px; text-align: left !important; }
-.timeline-item { justify-content: flex-start; }
-.fan-container:hover .card-left, .fan-container:hover .card-right { transform: none; }
-/* Adjust stack top for mobile */
-.stack-card { top: 150px; }
-.stack-card > div { width: 95%; padding: 20px; height: auto; flex-direction: column; gap: 20px; }
-.stack-card .text-8xl { font-size: 4rem; }
-}
+        .glass-panel {
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            background: rgba(45, 10, 5, 0.4);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
 
-/* --- ANIMATION UTILITIES --- */
-.char-reveal { display: inline-block; opacity: 0; }
-.cursor-trail {
-position: fixed;
-width: 8px; height: 8px;
-background: #ff4500;
-border-radius: 50%;
-pointer-events: none;
-z-index: 9999;
-box-shadow: 0 0 10px #ff4500, 0 0 20px #c41e3a;
-transition: opacity 0.3s;
-}
+        .glow-text {
+            text-shadow: 0 0 20px rgba(196, 30, 58, 0.8), 0 0 40px rgba(255, 69, 0, 0.4);
+        }
 
-/* --- ADDED: FLOATING STARS & DOLLY ZOOM SUPPORT --- */
-#floating-stars {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -25; /* Behind content, in front of video */
-    pointer-events: none;
-    overflow: hidden;
-    transform-origin: center center;
-    will-change: transform;
-}
-.star-particle {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
-    animation: 
-        floatStar 15s infinite linear alternate, 
-        twinkleStar 4s infinite ease-in-out;
-}
-@keyframes floatStar {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(var(--mx), var(--my)); }
-}
-@keyframes twinkleStar {
-    0%, 100% { opacity: 0.2; transform: scale(0.8); }
-    50% { opacity: 0.9; transform: scale(1.2); }
-}
+        /* HUD Glitch Effect */
+        .hud-glitch-hover:hover {
+            animation: glitch-text 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: var(--accent-cyan);
+        }
 
-/* --- 3D CUBE & COUNTDOWN STYLES --- */
-.cube-lock-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(26, 5, 0, 0.8);
-    position: relative;
-    z-index: 45;
-    backdrop-filter: blur(5px);
-}
+        @keyframes glitch-text {
+            0% {
+                transform: translate(0);
+            }
 
-.cube-scene {
-    width: 200px;
-    height: 200px;
-    perspective: 1000px;
-    cursor: pointer;
-    transition: transform 0.5s;
-    position: relative;
-}
-.cube-scene:hover { transform: scale(1.1); }
+            20% {
+                transform: translate(-2px, 2px);
+            }
 
-.cube-3d {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: spinCube 12s infinite linear;
-}
+            40% {
+                transform: translate(-2px, -2px);
+            }
 
-.cube-face {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background: linear-gradient(45deg, rgba(196, 30, 58, 0.7), rgba(255, 69, 0, 0.7));
-    border: 2px solid #ff8c00;
-    box-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    color: white;
-    font-weight: 900;
-    backface-visibility: visible;
-}
+            60% {
+                transform: translate(2px, 2px);
+            }
 
-.cube-face.front  { transform: rotateY(0deg) translateZ(100px); }
-.cube-face.right  { transform: rotateY(90deg) translateZ(100px); }
-.cube-face.back   { transform: rotateY(180deg) translateZ(100px); }
-.cube-face.left   { transform: rotateY(-90deg) translateZ(100px); }
-.cube-face.top    { transform: rotateX(90deg) translateZ(100px); }
-.cube-face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+            80% {
+                transform: translate(2px, -2px);
+            }
 
-.cube-shard {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, #c41e3a, #ff8c00);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
-    transform-style: preserve-3d;
-    backface-visibility: visible;
-    pointer-events: none;
-    z-index: 50;
-    opacity: 1;
-}
+            100% {
+                transform: translate(0);
+            }
+        }
 
-@keyframes spinCube {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
+        .tech-border {
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            position: relative;
+        }
 
-@media (max-width: 768px) {
-    .cube-scene { width: 150px; height: 150px; }
-    .cube-face { width: 150px; height: 150px; font-size: 24px; }
-    .cube-face.front  { transform: rotateY(0deg) translateZ(75px); }
-    .cube-face.right  { transform: rotateY(90deg) translateZ(75px); }
-    .cube-face.back   { transform: rotateY(180deg) translateZ(75px); }
-    .cube-face.left   { transform: rotateY(-90deg) translateZ(75px); }
-    .cube-face.top    { transform: rotateX(90deg) translateZ(75px); }
-    .cube-face.bottom { transform: rotateX(-90deg) translateZ(75px); }
-}
+        .tech-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid #00f3ff;
+            border-left: 2px solid #00f3ff;
+        }
 
-.countdown-box {
-    background: rgba(0,0,0,0.6);
-    border: 1px solid rgba(255,69,0,0.3);
-    padding: 15px 25px;
-    border-radius: 12px;
-    text-align: center;
-    min-width: 90px;
-}
-.countdown-val {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
-    font-weight: 900;
-    color: #ff8c00;
-    text-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
-}
-.countdown-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.6);
-    margin-top: 5px;
-}
-.parallax-mission-bg {
-    position: absolute;
-    top: -50%;
-    left: 0;
-    width: 100%;
-    height: 200%;
-    background: url('https://images.unsplash.com/photo-1614728853970-32a22507da63?q=80&w=2000&auto=format&fit=crop');
-    background-size: cover;
-    background-position: center;
-    z-index: -10;
-    opacity: 0.15;
-    pointer-events: none;
-    will-change: transform;
-}
+        .tech-border::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            border-bottom: 2px solid #00f3ff;
+            border-right: 2px solid #00f3ff;
+        }
 
-/* --- UPDATED: PERFECT 3D SHAPES --- */
+        /* HORIZONTAL TIMELINE STYLES */
+        .timeline-section {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            /* Fill viewport for centering */
+            position: relative;
+        }
 
-.shape-lock-container {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgba(26, 5, 0, 0.85); /* Solid Lock Background */
-    border-top: 1px solid rgba(255,69,0,0.2);
-    border-bottom: 1px solid rgba(255,69,0,0.2);
-    perspective: 1200px;
-    position: relative;
-    z-index: 60;
-    backdrop-filter: blur(10px);
-}
+        .timeline-horizontal {
+            display: flex;
+            gap: 150px;
+            /* Increased from 100px */
+            padding: 0 10vw;
+            will-change: transform;
+        }
 
-/* 1. PERFECT TETRAHEDRON (300px) */
-.tetra-scene {
-    width: 300px; height: 300px;
-    transform-style: preserve-3d;
-    cursor: pointer;
-    transition: transform 0.4s ease;
-}
-.tetra-scene:hover { transform: scale(1.05); }
+        .h-timeline-item {
+            flex: 0 0 450px;
+            /* Increased from 350px */
+            position: relative;
+        }
 
-.tetra {
-    position: relative;
-    width: 100%; height: 100%;
-    transform-style: preserve-3d;
-    animation: spinTetra 12s infinite linear;
-}
-@keyframes spinTetra {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
+        .h-timeline-content {
+            border-left: 2px solid #c41e3a;
+            padding-left: 20px;
+            position: relative;
+        }
 
-/* 
+        .h-timeline-node {
+            width: 12px;
+            height: 12px;
+            background: #00f3ff;
+            border-radius: 50%;
+            position: absolute;
+            left: -7px;
+            top: 10px;
+            box-shadow: 0 0 15px #00f3ff;
+        }
+
+        /* REWARDS FAN EFFECT */
+        .fan-card {
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s;
+        }
+
+        .fan-container:hover .card-left {
+            transform: rotate(-15deg) translateX(-180px) scale(0.9);
+        }
+
+        .fan-container:hover .card-right {
+            transform: rotate(15deg) translateX(180px) scale(0.9);
+        }
+
+        .fan-container:hover .card-center {
+            transform: translateY(-20px) scale(1.05);
+            z-index: 50;
+        }
+
+        /* --- REWARDS STACK EFFECT (FIXED) --- */
+        .stack-wrapper {
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        .stack-card {
+            position: sticky;
+            top: 200px;
+            /* Offset to sit below the sticky title */
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            /* Space between cards */
+            transition: transform 0.3s ease-out;
+        }
+
+        .glass-morphism {
+            backdrop-filter: blur(20px);
+            /* Darker, opaque background so cards hide the ones behind them */
+            background: rgba(26, 5, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stack-card:hover .glass-morphism {
+            transform: translateY(-10px);
+            border-color: #ff8c00;
+        }
+
+        /* REFINED MISSION CHALLENGES */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .challenge-card {
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .challenge-card::before {
+            content: 'SECURE_TRANS';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 8px;
+            font-family: 'Share Tech Mono';
+            opacity: 0.2;
+        }
+
+        /* MISSION BRIEFING MODAL CRT EFFECT */
+        .briefing-content::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #mission-briefing.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .briefing-content {
+            border: 1px solid var(--accent-cyan);
+            background: rgba(0, 5, 10, 0.98);
+            box-shadow: 0 0 100px rgba(196, 30, 58, 0.1);
+            position: relative;
+            overflow: visible;
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        .briefing-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c41e3a, transparent);
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% {
+                top: -100%;
+            }
+
+            100% {
+                top: 200%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .challenge-card {
+                min-height: auto;
+            }
+        }
+
+        /* --- ANIMATION UTILITIES --- */
+        .char-reveal {
+            display: inline-block;
+            opacity: 0;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #ff4500;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 10px #ff4500, 0 0 20px #c41e3a;
+            transition: opacity 0.3s;
+        }
+
+        /* --- ADDED: FLOATING STARS & DOLLY ZOOM SUPPORT --- */
+        #floating-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -25;
+            /* Behind content, in front of video */
+            pointer-events: none;
+            overflow: hidden;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .star-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+            animation:
+                floatStar 15s infinite linear alternate,
+                twinkleStar 4s infinite ease-in-out;
+        }
+
+        @keyframes floatStar {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(var(--mx), var(--my));
+            }
+        }
+
+        @keyframes twinkleStar {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.2);
+            }
+        }
+
+        /* --- 3D CUBE & COUNTDOWN STYLES --- */
+        .cube-lock-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(26, 5, 0, 0.8);
+            position: relative;
+            z-index: 45;
+            backdrop-filter: blur(5px);
+        }
+
+        .cube-scene {
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.5s;
+            position: relative;
+        }
+
+        .cube-scene:hover {
+            transform: scale(1.1);
+        }
+
+        .cube-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spinCube 12s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, rgba(196, 30, 58, 0.7), rgba(255, 69, 0, 0.7));
+            border: 2px solid #ff8c00;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            font-weight: 900;
+            backface-visibility: visible;
+        }
+
+        .cube-face.front {
+            transform: rotateY(0deg) translateZ(100px);
+        }
+
+        .cube-face.right {
+            transform: rotateY(90deg) translateZ(100px);
+        }
+
+        .cube-face.back {
+            transform: rotateY(180deg) translateZ(100px);
+        }
+
+        .cube-face.left {
+            transform: rotateY(-90deg) translateZ(100px);
+        }
+
+        .cube-face.top {
+            transform: rotateX(90deg) translateZ(100px);
+        }
+
+        .cube-face.bottom {
+            transform: rotateX(-90deg) translateZ(100px);
+        }
+
+        .cube-shard {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #c41e3a, #ff8c00);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 1;
+        }
+
+        @keyframes spinCube {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cube-scene {
+                width: 150px;
+                height: 150px;
+            }
+
+            .cube-face {
+                width: 150px;
+                height: 150px;
+                font-size: 24px;
+            }
+
+            .cube-face.front {
+                transform: rotateY(0deg) translateZ(75px);
+            }
+
+            .cube-face.right {
+                transform: rotateY(90deg) translateZ(75px);
+            }
+
+            .cube-face.back {
+                transform: rotateY(180deg) translateZ(75px);
+            }
+
+            .cube-face.left {
+                transform: rotateY(-90deg) translateZ(75px);
+            }
+
+            .cube-face.top {
+                transform: rotateX(90deg) translateZ(75px);
+            }
+
+            .cube-face.bottom {
+                transform: rotateX(-90deg) translateZ(75px);
+            }
+        }
+
+        .countdown-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .countdown-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff8c00;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
+
+        .parallax-mission-bg {
+            position: absolute;
+            top: -50%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: url('https://images.unsplash.com/photo-1614728853970-32a22507da63?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: -10;
+            opacity: 0.15;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* --- UPDATED: PERFECT 3D SHAPES --- */
+
+        .shape-lock-container {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 5, 0, 0.85);
+            /* Solid Lock Background */
+            border-top: 1px solid rgba(255, 69, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 69, 0, 0.2);
+            perspective: 1200px;
+            position: relative;
+            z-index: 100;
+            /* Increased to stay above standard content */
+            backdrop-filter: blur(10px);
+        }
+
+        /* 1. PERFECT TETRAHEDRON (300px) */
+        .tetra-scene {
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .tetra-scene:hover {
+            transform: scale(1.05);
+        }
+
+        .tetra {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: spinTetra 12s infinite linear;
+        }
+
+        @keyframes spinTetra {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+        /* 
    Tetrahedron Geometry:
    Side = 300px.
    Face Height = 300 * 0.866 = 260px.
    Midradius (Center to Face) = 300 / (2 * sqrt(6)) = ~61.2px (Adjusted for visual scaling)
    We use rectangular divs with clip-path to ensure perfect seams.
 */
-.tetra-face {
-    position: absolute;
-    width: 300px; height: 260px;
-    left: 0; top: 20px; /* Center adjustment */
-    background: linear-gradient(135deg, rgba(255,140,0,0.8), rgba(255,69,0,0.6));
-    border: 1px solid rgba(255,255,255,0.4);
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    transform-origin: 50% 66.66%; /* Geometric center of triangle */
-    backface-visibility: visible;
-    box-shadow: inset 0 0 30px rgba(255,140,0,0.4);
-}
+        .tetra-face {
+            position: absolute;
+            width: 300px;
+            height: 260px;
+            left: 0;
+            top: 20px;
+            /* Center adjustment */
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.8), rgba(255, 69, 0, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform-origin: 50% 66.66%;
+            /* Geometric center of triangle */
+            backface-visibility: visible;
+            box-shadow: inset 0 0 30px rgba(255, 140, 0, 0.4);
+        }
 
-/* Dihedral Angle 70.5deg -> 19.5deg tilt from vertical */
-.tetra-face:nth-child(1) { transform: rotateY(0deg) translateZ(44px) rotateX(19.5deg); }
-.tetra-face:nth-child(2) { transform: rotateY(120deg) translateZ(44px) rotateX(19.5deg); }
-.tetra-face:nth-child(3) { transform: rotateY(240deg) translateZ(44px) rotateX(19.5deg); }
-/* Bottom Face */
-.tetra-face:nth-child(4) { transform: rotateX(90deg) translateZ(-44px); filter: brightness(0.7); }
+        /* Dihedral Angle 70.5deg -> 19.5deg tilt from vertical */
+        .tetra-face:nth-child(1) {
+            transform: rotateY(0deg) translateZ(44px) rotateX(19.5deg);
+        }
+
+        .tetra-face:nth-child(2) {
+            transform: rotateY(120deg) translateZ(44px) rotateX(19.5deg);
+        }
+
+        .tetra-face:nth-child(3) {
+            transform: rotateY(240deg) translateZ(44px) rotateX(19.5deg);
+        }
+
+        /* Bottom Face */
+        .tetra-face:nth-child(4) {
+            transform: rotateX(90deg) translateZ(-44px);
+            filter: brightness(0.7);
+        }
 
 
-/* 2. PERFECT DODECAHEDRON (220px) */
-/* Requires 12 Pentagons and precise Dihedral Angles */
-.dodeca-scene {
-    width: 220px; height: 220px;
-    transform-style: preserve-3d;
-    cursor: pointer;
-    transition: transform 0.4s ease;
-}
-.dodeca-scene:hover { transform: scale(1.05); }
+        /* 2. PERFECT DODECAHEDRON (220px) */
+        /* Requires 12 Pentagons and precise Dihedral Angles */
+        .dodeca-scene {
+            width: 220px;
+            height: 220px;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
 
-.dodeca {
-    position: relative;
-    width: 100%; height: 100%;
-    transform-style: preserve-3d;
-    animation: spinDodeca 25s infinite linear;
-}
-@keyframes spinDodeca {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
+        .dodeca-scene:hover {
+            transform: scale(1.05);
+        }
 
-/* Pentagon Face Construction */
-.dodeca-face {
-    position: absolute;
-    width: 100px; height: 100px; /* Base Pentagon Size */
-    left: 50%; top: 50%;
-    margin-left: -50px; margin-top: -50px;
-    background: linear-gradient(135deg, rgba(196,30,58,0.8), rgba(255,215,0,0.3));
-    border: 1px solid rgba(255,255,255,0.3);
-    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-    backface-visibility: visible;
-    transform-style: preserve-3d;
-    box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
-}
+        .dodeca {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: spinDodeca 25s infinite linear;
+        }
 
-/* 
+        @keyframes spinDodeca {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+        /* Pentagon Face Construction */
+        .dodeca-face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            /* Base Pentagon Size */
+            left: 50%;
+            top: 50%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.8), rgba(255, 215, 0, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            backface-visibility: visible;
+            transform-style: preserve-3d;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* 
    Dodecahedron Geometry Math:
    Inner Radius (ri) = 1.1135 * Edge Length
    Edge = 100px -> ri = 111px.
    Dihedral = 116.565 deg.
    Tilt = 63.435 deg.
 */
-.dodeca-face:nth-child(1) { transform: rotateY(0deg) rotateX(90deg) translateZ(111px); }
-.dodeca-face:nth-child(2) { transform: rotateY(0deg) rotateX(26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(3) { transform: rotateY(72deg) rotateX(26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(4) { transform: rotateY(144deg) rotateX(26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(5) { transform: rotateY(216deg) rotateX(26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(6) { transform: rotateY(288deg) rotateX(26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(7) { transform: rotateY(36deg) rotateX(-26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(8) { transform: rotateY(108deg) rotateX(-26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(9) { transform: rotateY(180deg) rotateX(-26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(10) { transform: rotateY(252deg) rotateX(-26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(11) { transform: rotateY(324deg) rotateX(-26.6deg) translateZ(111px); }
-.dodeca-face:nth-child(12) { transform: rotateY(0deg) rotateX(-90deg) translateZ(111px); }
-
-
-/* MIRROR FRAGMENTS */
-.mirror-shard {
-    position: absolute;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,200,255,0.2));
-    border: 1px solid white;
-    box-shadow: 0 0 15px white;
-    backface-visibility: visible;
-    z-index: 100;
-    pointer-events: none;
-    transform-style: preserve-3d;
-}
-
-/* --- CUSTOM ASTRONAUT CURSOR --- */
-@media (pointer: fine) {
-    body,
-    a,
-    button,
-    input,
-    select,
-    textarea,
-    [role="button"],
-    .cursor-pointer {
-        cursor: url('astro-cursor.png') 2 2, auto;
-    }
-}
-</style>
-</head>
-<body class="text-slate-100 selection:bg-primary selection:text-white">
-<!-- VIDEO BACKGROUND LAYER -->
-<div id="video-background-layer">
-<video id="bg-video" autoplay muted loop playsinline poster="">
-<source src="one.mp4" type="video/mp4">
-Your browser does not support HTML5 video.
-</video>
-</div>
-<!-- ATMOSPHERIC OVERLAYS -->
-<div class="cinematic-overlay"></div>
-<div class="scanlines"></div>
-<!-- ADDED: FLOATING STARS CONTAINER -->
-<div id="floating-stars"></div>
-
-<!-- PARTICLE SYSTEM CONTAINER -->
-<canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"></canvas>
-<!-- NAV BAR -->
-<nav class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 nav-wrapper opacity-0">
-<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-<!-- LEFT: Logo Image -->
-<a href="index.html" class="flex items-center space-x-4 rounded-full overflow-hidden bg-white/5" aria-label="AEROCREST 2026">
-    <div class="h-20 w-20 rounded-full bg-center bg-cover shadow-[0_0_20px_rgba(196,30,58,0.6)]" style="background-image: url('logooo.png');"></div>
-    <span class="sr-only">AEROCREST 2026</span>
-</a>
-<!-- CENTER: Links (Hidden on Mobile) -->
-    <div class="hidden md:flex space-x-8 items-center font-orbitron text-[10px] font-bold tracking-[0.2em] uppercase">
-        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#mission">
-            <span class="relative z-10">Mission</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#timeline">
-            <span class="relative z-10">Timeline</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#challenges">
-            <span class="relative z-10">Challenges</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group" href="#rewards">
-            <span class="relative z-10">Rewards</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
-        </a>
-    </div>
-
-    <!-- RIGHT: Register Button + College Logo -->
-    <div class="flex items-center gap-4">
-        <!-- ADDED: SPONSOR US BUTTON -->
-        <a href="sponsor.html" class="hidden md:block text-accent-gold font-bold font-orbitron text-xs tracking-widest hover:text-white transition-colors border border-accent-gold/50 hover:border-white px-6 py-2 rounded-full hover:shadow-[0_0_15px_rgba(255,140,0,0.5)]">
-            SPONSOR_US
-        </a>
-        
-        <button onclick="window.location.href='register.html'" class="nav-cta bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg border border-white/10 hover:shadow-[0_0_20px_rgba(255,69,0,0.6)]">
-            Register
-        </button>
-        
-        <!-- NEW LOGO ADDITION -->
-        <a href="https://crescent.education/" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity duration-300">
-            <img src="logo.png" alt="BS Crescent Institute" class="h-12 w-auto object-contain bg-white/5 rounded-md p-1 backdrop-blur-sm border border-white/10 hover:border-accent-gold transition-colors">
-        </a>
-    </div>
-</div>
-</nav>
-<!-- HERO -->
-<section class="relative min-h-screen flex items-center justify-center pt-20 mars-hud-bg overflow-hidden">
-<div class="relative z-10 text-center px-4">
-<div class="hero-badge block mx-auto w-fit px-4 py-1 border border-accent-mars/50 bg-accent-mars/5 rounded-full text-accent-mars text-xl font-black mb-6 tracking-[0.2em] font-orbitron opacity-0">
-DEPARTMENT OF AERONAUTICAL ENGINEERING
-</div>
-<h1 class="hero-title text-6xl md:text-9xl font-black mb-6 tracking-tighter glow-text font-orbitron italic perspective-text">
-<span class="inline-block">AEROCREST</span> <br/>
-<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent-mars to-accent-gold uppercase inline-block text-3xl md:text-8xl">M.A.R.S 2026 </span>
-</h1>
-<p class="hero-subtitle text-lg md:text-2xl text-orange-100 max-w-3xl mx-auto mb-10 font-light font-display uppercase tracking-widest opacity-0">
-A virtual Mars Atmospheric Resilient Shelter [M.A.R.S] challenge
-</p>
-<div class="hero-buttons flex flex-col sm:flex-row items-center justify-center gap-6 opacity-0">
-<button onclick="window.location.href='register.html'" class="w-full sm:w-auto bg-primary hover:bg-accent-mars text-white px-12 py-5 rounded-sm font-black text-xl font-orbitron tracking-tighter transition-all transform hover:scale-110 shadow-[0_0_40px_rgba(196,30,58,0.4)] hover:shadow-[0_0_60px_rgba(255,69,0,0.8)] border border-transparent hover:border-white/50">
-INITIALIZE_REGISTRATION
-</button>
-<button onclick="document.getElementById('mission').scrollIntoView()" class="w-full sm:w-auto bg-white/5 border border-white/20 hover:bg-white/10 text-white px-12 py-5 rounded-sm font-black text-xl font-orbitron tracking-tighter transition-all hover:tracking-wide">
-VIEW_PROPOSAL
-</button>
-</div>
-</div>
-</section>
-
-<!-- 3D CUBE LOCK & GATEWAY SECTION -->
-<section id="mission-gateway" class="cube-lock-container">
-    
-    <!-- 1. CSS STYLES -->
-    <style>
-        :root {
-            /* 👇 CHANGE THIS NUMBER TO RESIZE THE CUBE 👇 */
-            --cube-size: 300px; 
+        .dodeca-face:nth-child(1) {
+            transform: rotateY(0deg) rotateX(90deg) translateZ(111px);
         }
 
-        /* Container */
-        .cube-scene {
-            width: var(--cube-size);
-            height: var(--cube-size);
-            perspective: 1000px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 50;
+        .dodeca-face:nth-child(2) {
+            transform: rotateY(0deg) rotateX(26.6deg) translateZ(111px);
         }
 
-        /* The 3D Object */
-        .cube-3d {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            /* Moves the center to the middle */
-            transform: translateZ(calc(var(--cube-size) * -0.5));
-            /* Spin forever */
-            animation: spinCube 8s infinite linear;
-            cursor: pointer;
+        .dodeca-face:nth-child(3) {
+            transform: rotateY(72deg) rotateX(26.6deg) translateZ(111px);
         }
 
-        /* REMOVED THE HOVER PAUSE SO IT NEVER STOPS SPINNING */
+        .dodeca-face:nth-child(4) {
+            transform: rotateY(144deg) rotateX(26.6deg) translateZ(111px);
+        }
 
-        /* Faces */
-        .cube-face {
+        .dodeca-face:nth-child(5) {
+            transform: rotateY(216deg) rotateX(26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(6) {
+            transform: rotateY(288deg) rotateX(26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(7) {
+            transform: rotateY(36deg) rotateX(-26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(8) {
+            transform: rotateY(108deg) rotateX(-26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(9) {
+            transform: rotateY(180deg) rotateX(-26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(10) {
+            transform: rotateY(252deg) rotateX(-26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(11) {
+            transform: rotateY(324deg) rotateX(-26.6deg) translateZ(111px);
+        }
+
+        .dodeca-face:nth-child(12) {
+            transform: rotateY(0deg) rotateX(-90deg) translateZ(111px);
+        }
+
+
+        /* MIRROR FRAGMENTS */
+        .mirror-shard {
             position: absolute;
-            width: var(--cube-size);
-            height: var(--cube-size);
-            background: rgba(215, 6, 6, 0.9);
-            border: 2px solid #000000; /* Gold */
-            color: rgb(0, 0, 0);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(200, 200, 255, 0.2));
+            border: 1px solid white;
+            box-shadow: 0 0 15px white;
+            backface-visibility: visible;
+            z-index: 100;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        /* --- CUSTOM ASTRONAUT CURSOR --- */
+        @media (pointer: fine) {
+
+            body,
+            a,
+            button,
+            input,
+            select,
+            textarea,
+            [role="button"],
+            .cursor-pointer {
+                cursor: url('assets/astro-cursor2.png') 2 2, auto;
+            }
+        }
+    </style>
+</head>
+
+<!-- BOOT-UP OVERLAY -->
+<div id="boot-loader" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center font-mono">
+    <div class="max-w-md w-full px-10">
+        <div id="boot-text" class="text-accent-cyan text-xs space-y-1 mb-4"></div>
+        <div class="w-full h-1 bg-white/10 relative overflow-hidden">
+            <div id="boot-progress" class="absolute top-0 left-0 h-full bg-accent-cyan w-0"></div>
+        </div>
+        <div class="flex justify-between mt-2">
+            <span class="text-[8px] text-white/40 tracking-widest uppercase">Initializing Mission Control</span>
+            <span id="boot-percent" class="text-[8px] text-accent-cyan">0%</span>
+        </div>
+    </div>
+</div>
+
+<body class="text-slate-100 selection:bg-primary selection:text-white opacity-0" id="main-body">
+    <!-- VIDEO BACKGROUND LAYER -->
+    <div id="video-background-layer">
+        <video id="bg-video" autoplay muted loop playsinline poster="">
+            <source src="assets/one.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+    </div>
+    <!-- ATMOSPHERIC OVERLAYS -->
+    <div class="cinematic-overlay"></div>
+    <div class="scanlines"></div>
+    <!-- ADDED: FLOATING STARS CONTAINER -->
+    <div id="floating-stars"></div>
+
+    <!-- PARTICLE SYSTEM CONTAINER -->
+    <canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"></canvas>
+    <!-- NAV BAR -->
+    <nav class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 nav-wrapper opacity-0">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- LEFT: Logo Image -->
+            <a href="index.html" class="flex items-center space-x-4 rounded-full overflow-hidden bg-white/5"
+                aria-label="AEROCREST 2026">
+                <div class="h-20 w-20 rounded-full bg-center bg-cover shadow-[0_0_20px_rgba(196,30,58,0.6)]"
+                    style="background-image: url('assets/logooo.png');"></div>
+                <span class="sr-only">AEROCREST 2026</span>
+            </a>
+            <!-- CENTER: Links (Hidden on Mobile) -->
+            <div
+                class="hidden md:flex space-x-8 items-center font-orbitron text-[10px] font-bold tracking-[0.2em] uppercase">
+                <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group"
+                    href="#mission">
+                    <span class="relative z-10">Mission</span>
+                    <span
+                        class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group"
+                    href="#timeline">
+                    <span class="relative z-10">Timeline</span>
+                    <span
+                        class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group"
+                    href="#challenges">
+                    <span class="relative z-10">Challenges</span>
+                    <span
+                        class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a class="nav-link hover:text-accent-mars transition-colors relative overflow-hidden group"
+                    href="#rewards">
+                    <span class="relative z-10">Rewards</span>
+                    <span
+                        class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+
+            <!-- RIGHT: Register Button + College Logo -->
+            <div class="flex items-center gap-4">
+                <!-- ADDED: SPONSOR US BUTTON -->
+                <a href="sponsor.html"
+                    class="hidden md:block text-accent-gold font-bold font-orbitron text-xs tracking-widest hover:text-white transition-colors border border-accent-gold/50 hover:border-white px-6 py-2 rounded-full hover:shadow-[0_0_15px_rgba(255,140,0,0.5)]">
+                    SPONSOR_US
+                </a>
+
+                <button onclick="window.location.href='register.html'"
+                    class="nav-cta bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg border border-white/10 hover:shadow-[0_0_20px_rgba(255,69,0,0.6)] hud-glitch-hover">
+                    Register
+                </button>
+
+                <!-- NEW LOGO ADDITION -->
+                <a href="https://crescent.education/" target="_blank" rel="noopener noreferrer"
+                    class="hover:opacity-80 transition-opacity duration-300">
+                    <img src="assets/logo.png" alt="BS Crescent Institute"
+                        class="h-12 w-auto object-contain bg-white/5 rounded-md p-1 backdrop-blur-sm border border-white/10 hover:border-accent-gold transition-colors">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- HERO -->
+    <!-- ================================================================= -->
+    <!-- CINEMATIC HERO SECTION [START] -->
+    <!-- Replace your old Hero Section with this entire block -->
+    <!-- ================================================================= -->
+
+    <style>
+        /* --- CINEMATIC HERO STYLES (Scoped to avoid conflicts) --- */
+        #cinematic-hero {
+            position: relative;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            /* Perspective for 3D parallax elements */
+            perspective: 1000px;
+            z-index: 10;
+        }
+
+        /* CONTAINER for Parallax Movement */
+        .cine-content-layer {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            padding: 0 20px;
+            will-change: transform, opacity;
+            /* Initial State for Animation */
+            opacity: 0;
+            animation: cineSequence 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* 1. TECHNICAL BADGE (Top) */
+        .cine-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2vh;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            /* Dark, not glowing */
+            backdrop-filter: blur(4px);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cine-badge::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            background: #c41e3a;
+            /* Flat Mars Red */
+            border-radius: 50%;
+        }
+
+        /* 2. MASSIVE TYPOGRAPHY */
+        .cine-title-group {
+            margin-bottom: 2vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cine-title-primary {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-family: 'Orbitron', sans-serif; 
-            font-size: calc(var(--cube-size) * 0.2); 
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-            user-select: none;
-            /* Ensure faces don't flicker */
-            backface-visibility: hidden; 
+            font-size: clamp(4rem, 13vw, 11rem);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
-        /* 3D Positioning (Calculated automatically) */
-        .cube-face.front  { transform: rotateY(  0deg) translateZ(calc(var(--cube-size) / 2)); }
-        .cube-face.back   { transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
-        .cube-face.right  { transform: rotateY( 90deg) translateZ(calc(var(--cube-size) / 2)); }
-        .cube-face.left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
-        .cube-face.top    { transform: rotateX( 90deg) translateZ(calc(var(--cube-size) / 2)); }
-        .cube-face.bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+        .cine-title-secondary {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 300;
+            font-size: clamp(1.2rem, 4vw, 3rem);
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.6em;
+            /* Extreme cinematic tracking */
+            margin-top: 1vh;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cineFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        }
 
-        /* Shards for explosion */
-        .cube-shard {
+        .cine-accent {
+            color: #c41e3a;
+            /* Flat red accent */
+            font-weight: 700;
+        }
+
+        /* 3. EDITORIAL DIVIDER & SUBTITLE */
+        .cine-separator {
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, #ffffff, transparent);
+            margin: 20px auto;
+            opacity: 0.5;
+        }
+
+        .cine-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            max-width: 600px;
+            margin: 0 auto 5vh auto;
+            opacity: 0;
+        }
+
+        /* 4. INDUSTRIAL BUTTONS */
+        .cine-actions {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            opacity: 0;
+            animation: cineFadeUp 1s ease 1s forwards;
+        }
+
+        .btn-production {
+            position: relative;
+            padding: 18px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+        }
+
+        /* Primary: Solid White Border */
+        .btn-solid {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-solid:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Secondary: Ghost */
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+        }
+
+        /* 5. SCROLL INDICATOR */
+        .cine-scroll {
             position: absolute;
-            background: #FFD700;
-            backface-visibility: hidden;
-            pointer-events: none;
-            box-shadow: 0 0 10px #FFD700;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeIn 2s ease 2s forwards;
         }
 
-        @keyframes spinCube {
-            0% { transform: translateZ(calc(var(--cube-size) * -0.5)) rotateX(0deg) rotateY(0deg); }
-            100% { transform: translateZ(calc(var(--cube-size) * -0.5)) rotateX(360deg) rotateY(360deg); }
+        .scroll-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #c41e3a;
+            animation: dropLine 2s infinite;
+        }
+
+        /* ANIMATIONS */
+        @keyframes cineSequence {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes cineScaleUp {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes cineFadeUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes dropLine {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            50% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* MOBILE TWEAKS */
+        @media (max-width: 768px) {
+            .cine-title-primary {
+                line-height: 1;
+                margin-bottom: 20px;
+                font-size: clamp(3rem, 15vw, 5rem);
+            }
+
+            .cine-badge {
+                font-size: 0.6rem;
+                padding: 6px 12px;
+            }
+
+            .cine-title-secondary {
+                letter-spacing: 0.3em;
+                margin-left: 0;
+            }
+
+            .cine-actions {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 30px;
+            }
+
+            .btn-production {
+                width: 100%;
+            }
+
+            .cine-separator {
+                height: 40px;
+            }
         }
     </style>
 
-    <!-- 2. HTML CONTENT -->
-    <div class="text-center mb-10">
-        <p class="text-accent-gold font-orbitron tracking-[0.3em] text-sm animate-pulse">SYSTEM LOCKED</p>
-        <h3 class="text-3xl font-black text-white font-orbitron mt-2">ACCESS MISSION DATA</h3>
-    </div>
-    
-    <!-- ADDED onclick to the WRAPPER to catch clicks easily while spinning -->
-    <div class="cube-scene" onclick="unlockMission()">
-        <div class="cube-3d">
-            <div class="cube-face front">MARS</div>
-            <div class="cube-face back">2026</div>
-            <div class="cube-face right"><span class="material-icons text-5xl">lock</span></div>
-            <div class="cube-face left"><span class="material-icons text-5xl">rocket</span></div>
-            <div class="cube-face top">GO</div>
-            <div class="cube-face bottom">///</div>
+    <section id="cinematic-hero">
+        <!-- Content Layer for Parallax -->
+        <div class="cine-content-layer" id="hero-layer">
+
+            <!-- Badge -->
+            <div class="cine-badge">
+                Department of Aeronautical Engineering
+            </div>
+
+            <!-- Typography -->
+            <div class="cine-title-group">
+                <h1 class="cine-title-primary">AEROCREST</h1>
+                <h2 class="cine-title-secondary">M.A.R.S <span class="cine-accent">2026</span></h2>
+            </div>
+
+            <!-- Decoration -->
+            <div class="cine-separator"></div>
+
+            <!-- Subtitle -->
+            <p class="cine-subtitle">
+                A Virtual Mars Atmospheric Resilient Shelter Challenge
+            </p>
+
+            <!-- Actions -->
+            <div class="cine-actions">
+                <button onclick="window.location.href='register.html'"
+                    class="btn-production btn-solid hud-glitch-hover">
+                    Initialize Registration
+                </button>
+                <button onclick="document.getElementById('mission').scrollIntoView()"
+                    class="btn-production btn-ghost hud-glitch-hover">
+                    View Proposal
+                </button>
+            </div>
         </div>
-    </div>
-    
-    <p class="text-gray-500 mt-12 font-mono text-xs tracking-widest">CLICK CUBE TO DECRYPT</p>
 
-    <!-- 3. JAVASCRIPT LOGIC -->
+    </section>
+
     <script>
-        function unlockMission() {
-            const scene = document.querySelector('.cube-scene');
-            const cube = document.querySelector('.cube-3d');
-            const container = document.getElementById('mission-gateway');
-            
-            // 1. INSTANTLY HIDE CUBE (Visual Blast)
-            cube.style.display = 'none';
+        // --- CINEMATIC PARALLAX & SCROLL EFFECTS ---
 
-            // 2. CREATE EXPLOSION SHARDS
-            const shardCount = 40; 
-            
-            for (let i = 0; i < shardCount; i++) {
-                const shard = document.createElement('div');
-                shard.classList.add('cube-shard');
-                
-                // Random shard size
-                const size = Math.random() * 40 + 10 + 'px'; 
-                
-                shard.style.width = size;
-                shard.style.height = size;
-                shard.style.left = '50%';
-                shard.style.top = '50%';
-                shard.style.transform = 'translate(-50%, -50%)';
-                scene.appendChild(shard);
+        // 1. Mouse Move Parallax (Subtle 3D shift)
+        const heroSection = document.getElementById('cinematic-hero');
+        const heroLayer = document.getElementById('hero-layer');
 
-                // Blast particles outward
-                gsap.to(shard, {
-                    x: gsap.utils.random(-600, 600),
-                    y: gsap.utils.random(-600, 600),
-                    z: gsap.utils.random(-500, 500),
-                    rotationX: gsap.utils.random(0, 720),
-                    rotationY: gsap.utils.random(0, 720),
-                    scale: 0, 
-                    opacity: 0,
-                    duration: gsap.utils.random(0.8, 1.5),
-                    ease: "power3.out",
-                    onComplete: () => shard.remove()
-                });
+        heroSection.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+
+            // Apply subtle shift to content
+            heroLayer.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+
+        // 2. Scroll Fade Out (Cinematic Exit)
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+
+            // Only trigger if we are near the top
+            if (scrollPosition < window.innerHeight) {
+                // Fade out content as you scroll down
+                const opacity = 1 - (scrollPosition / 600);
+                const translateY = scrollPosition * 0.5;
+
+                heroLayer.style.opacity = opacity > 0 ? opacity : 0;
+                heroLayer.style.transform = `translateY(${translateY}px)`;
+            }
+        });
+    </script>
+
+    <!-- ================================================================= -->
+    <!-- CINEMATIC HERO SECTION [END] -->
+    <!-- ================================================================= -->
+
+    <!-- 3D CUBE LOCK & GATEWAY SECTION -->
+    <section id="mission-gateway" class="cube-lock-container">
+
+        <!-- 1. CSS STYLES -->
+        <style>
+            :root {
+                /* 👇 CHANGE THIS NUMBER TO RESIZE THE CUBE 👇 */
+                --cube-size: 300px;
             }
 
-            // 3. FLASH EFFECT
-            const burst = document.createElement('div');
-            burst.style.cssText = `
+            /* Container */
+            .cube-scene {
+                width: var(--cube-size);
+                height: var(--cube-size);
+                perspective: 1000px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 50;
+            }
+
+            /* The 3D Object */
+            .cube-3d {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                transform-style: preserve-3d;
+                /* Moves the center to the middle */
+                transform: translateZ(calc(var(--cube-size) * -0.5));
+                /* Spin forever */
+                animation: spinCube 8s infinite linear;
+                cursor: pointer;
+            }
+
+            /* REMOVED THE HOVER PAUSE SO IT NEVER STOPS SPINNING */
+
+            /* Faces */
+            .cube-face {
+                position: absolute;
+                width: var(--cube-size);
+                height: var(--cube-size);
+                background: rgba(215, 6, 6, 0.9);
+                border: 2px solid #000000;
+                /* Gold */
+                color: rgb(0, 0, 0);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 900;
+                font-family: 'Orbitron', sans-serif;
+                font-size: calc(var(--cube-size) * 0.2);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+                user-select: none;
+                /* Ensure faces don't flicker */
+                backface-visibility: hidden;
+            }
+
+            /* 3D Positioning (Calculated automatically) */
+            .cube-face.front {
+                transform: rotateY(0deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            .cube-face.back {
+                transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            .cube-face.right {
+                transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            .cube-face.left {
+                transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            .cube-face.top {
+                transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            .cube-face.bottom {
+                transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2));
+            }
+
+            /* Shards for explosion */
+            .cube-shard {
+                position: absolute;
+                background: #FFD700;
+                backface-visibility: hidden;
+                pointer-events: none;
+                box-shadow: 0 0 10px #FFD700;
+            }
+
+            @keyframes spinCube {
+                0% {
+                    transform: translateZ(calc(var(--cube-size) * -0.5)) rotateX(0deg) rotateY(0deg);
+                }
+
+                100% {
+                    transform: translateZ(calc(var(--cube-size) * -0.5)) rotateX(360deg) rotateY(360deg);
+                }
+            }
+        </style>
+
+        <!-- 2. HTML CONTENT -->
+        <div class="text-center mb-10">
+            <p class="text-accent-gold font-orbitron tracking-[0.3em] text-sm animate-pulse">SYSTEM LOCKED</p>
+            <h3 class="text-3xl font-black text-white font-orbitron mt-2">ACCESS MISSION DATA</h3>
+        </div>
+
+        <!-- ADDED onclick to the WRAPPER to catch clicks easily while spinning -->
+        <div class="cube-scene" onclick="unlockMission()">
+            <div class="cube-3d">
+                <div class="cube-face front">MARS</div>
+                <div class="cube-face back">2026</div>
+                <div class="cube-face right"><span class="material-icons text-5xl">lock</span></div>
+                <div class="cube-face left"><span class="material-icons text-5xl">rocket</span></div>
+                <div class="cube-face top">GO</div>
+                <div class="cube-face bottom">///</div>
+            </div>
+        </div>
+
+        <p class="text-gray-500 mt-12 font-mono text-xs tracking-widest">CLICK CUBE TO DECRYPT</p>
+
+        <!-- 3. JAVASCRIPT LOGIC -->
+        <script>
+            function unlockMission() {
+                const scene = document.querySelector('.cube-scene');
+                const cube = document.querySelector('.cube-3d');
+                const container = document.getElementById('mission-gateway');
+
+                // 1. INSTANTLY HIDE CUBE (Visual Blast)
+                cube.style.display = 'none';
+
+                // 2. CREATE EXPLOSION SHARDS
+                const shardCount = 40;
+
+                for (let i = 0; i < shardCount; i++) {
+                    const shard = document.createElement('div');
+                    shard.classList.add('cube-shard');
+
+                    // Random shard size
+                    const size = Math.random() * 40 + 10 + 'px';
+
+                    shard.style.width = size;
+                    shard.style.height = size;
+                    shard.style.left = '50%';
+                    shard.style.top = '50%';
+                    shard.style.transform = 'translate(-50%, -50%)';
+                    scene.appendChild(shard);
+
+                    // Blast particles outward
+                    gsap.to(shard, {
+                        x: gsap.utils.random(-600, 600),
+                        y: gsap.utils.random(-600, 600),
+                        z: gsap.utils.random(-500, 500),
+                        rotationX: gsap.utils.random(0, 720),
+                        rotationY: gsap.utils.random(0, 720),
+                        scale: 0,
+                        opacity: 0,
+                        duration: gsap.utils.random(0.8, 1.5),
+                        ease: "power3.out",
+                        onComplete: () => shard.remove()
+                    });
+                }
+
+                // 3. FLASH EFFECT
+                const burst = document.createElement('div');
+                burst.style.cssText = `
                 position: absolute; top: 50%; left: 50%; 
                 width: 10px; height: 10px; 
                 background: white; border-radius: 50%; 
                 box-shadow: 0 0 50px 30px rgba(255,255,255,0.9);
                 transform: translate(-50%, -50%); z-index: 60; pointer-events: none;
             `;
-            scene.appendChild(burst);
-            gsap.to(burst, { scale: 20, opacity: 0, duration: 0.6, ease: "power2.out", onComplete: () => burst.remove() });
+                scene.appendChild(burst);
+                gsap.to(burst, { scale: 20, opacity: 0, duration: 0.6, ease: "power2.out", onComplete: () => burst.remove() });
 
-            // 4. HIDE SECTION AND SHOW CONTENT
-            setTimeout(() => {
-                 container.style.display = "none";
-                 
-                 const lockedContent = document.getElementById("locked-site-content");
-                 if(lockedContent) {
-                     lockedContent.style.display = "block";
-                     if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-                     
-                     // Smooth fade in
-                     gsap.to("#mission", { opacity: 1, duration: 1 });
-                     
-                     const missionSection = document.getElementById('mission');
-                     if(missionSection) missionSection.scrollIntoView({ behavior: 'smooth' });
-                 }
-            }, 800); 
-        }
-    </script>
-</section>
-
-<!-- WRAPPER FOR LOCKED CONTENT PHASE 1 -->
-<div id="locked-site-content" style="display: none;">
-
-    <!-- MISSION / PROPOSAL -->
-    <section class="py-24 px-6 relative z-10 overflow-hidden" id="mission" style="opacity: 0;">
-        <!-- PARALLAX BACKGROUND -->
-        <div class="parallax-mission-bg"></div>
-
-        <!-- NEW HEADER & COUNTDOWN -->
-        <div class="max-w-7xl mx-auto mb-20">
-            <div class="flex flex-col md:flex-row justify-between items-center border-b border-white/10 pb-10 gap-10">
-                <div class="text-left">
-                    <h2 class="text-7xl font-black font-orbitron italic uppercase tracking-tighter">THE MISSION</h2>
-                    <p class="text-accent-gold tracking-[0.4em] font-bold text-sm mt-2">T-MINUS TO LAUNCH</p>
-                </div>
-                
-                <div class="flex gap-4">
-                    <div class="countdown-box"><div id="cd-days" class="countdown-val">00</div><div class="countdown-label">DAYS</div></div>
-                    <div class="countdown-box"><div id="cd-hours" class="countdown-val">00</div><div class="countdown-label">HOURS</div></div>
-                    <div class="countdown-box"><div id="cd-minutes" class="countdown-val">00</div><div class="countdown-label">MINUTES</div></div>
-                    <div class="countdown-box"><div id="cd-seconds" class="countdown-val">00</div><div class="countdown-label">SECONDS</div></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Script for Countdown -->
-        <script>
-            const targetDate = new Date("March 23, 2026 09:00:00").getTime();
-            setInterval(function() {
-                const now = new Date().getTime();
-                const distance = targetDate - now;
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                document.getElementById("cd-days").innerText = days < 10 ? "0"+days : days;
-                document.getElementById("cd-hours").innerText = hours < 10 ? "0"+hours : hours;
-                document.getElementById("cd-minutes").innerText = minutes < 10 ? "0"+minutes : minutes;
-                document.getElementById("cd-seconds").innerText = seconds < 10 ? "0"+seconds : seconds;
-            }, 1000);
-
-            gsap.to(".parallax-mission-bg", {
-                yPercent: 30,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#mission",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        </script>
-
-        <!-- EXISTING CONTENT -->
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div class="space-y-6 gs-reveal-left">
-        <h2 class="text-5xl font-black font-orbitron uppercase italic typing-effect hidden">The Mission</h2>
-        <p class="text-lg text-orange-100/80 leading-relaxed font-display">
-        Organized by the <span class="text-white font-bold">Dept. of Aerospace Engineering</span>, this hackathon challenges students to design a software-based emergency habitat sustaining <span class="text-accent-gold font-bold">2 astronauts for 30 days</span> under extreme Martian constraints.
-        </p>
-        <div class="grid grid-cols-2 gap-4">
-        <div class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-colors">
-        <p class="text-[10px] text-accent-mars font-bold font-orbitron uppercase">Event Date</p>
-        <p class="font-bold">March 23, 2026</p>
-        </div>
-        <div class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-colors">
-        <p class="text-[10px] text-accent-mars font-bold font-orbitron uppercase">Venue</p>
-        <p class="font-bold">BSA Crescent Auditorium</p>
-        </div>
-        </div>
-        </div>
-        </div>
-    </section>
-    <!-- TIMELINE & CHALLENGES -->
-    <section class="py-32 bg-black/20" id="timeline">
-        <div class="max-w-5xl mx-auto px-6">
-            <h2 class="text-center text-5xl font-black font-orbitron mb-20 italic uppercase tracking-tighter gs-fade-up">Mission_Timeline</h2>
-            <div class="timeline-container">
-            <div class="timeline-line"></div>
-                <div class="timeline-item">
-                    <div class="timeline-content text-right pr-12">
-                        <p class="text-accent-mars font-black text-xs font-orbitron mb-1">FEB 15</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Registration Opening</h4>
-                        <p class="text-gray-400 text-sm">Official squad enlistment begins.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 01</span></div>
-                </div>
-                <div class="timeline-item flex-row-reverse">
-                    <div class="timeline-content text-left pl-12">
-                        <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 09</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Registration Close</h4>
-                        <p class="text-gray-400 text-sm">Registration closes.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 22</span></div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content text-right pr-12">
-                        <p class="text-accent-gold font-black text-xs font-orbitron mb-1">MAR 10-11</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Problem Statement Release</h4>
-                        <p class="text-gray-400 text-sm">Release of Problem Statement.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 23</span></div>
-                </div>
-                <div class="timeline-item flex-row-reverse">
-                    <div class="timeline-content text-left pl-12">
-                        <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 14</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Webinar-I (10:30 AM)</h4>
-                        <p class="text-gray-400 text-sm">Expert briefing session.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 27</span></div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content text-right pr-12">
-                        <p class="text-accent-mars font-black text-xs font-orbitron mb-1">MAR 17</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Round-I Submission</h4>
-                        <p class="text-gray-400 text-sm">Submit before 6:30 PM.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 30</span></div>
-                </div>
-                <div class="timeline-item flex-row-reverse">
-                    <div class="timeline-content text-left pl-12">
-                        <p class="text-accent-gold font-black text-xs font-orbitron mb-1">MAR 20</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Selection of Finalist</h4>
-                        <p class="text-gray-400 text-sm">Crew roster announcement.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pr-12 text-right hidden md:block"><span class="text-xs font-bold text-gray-500">DAY 33</span></div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content text-right pr-12">
-                        <p class="text-primary font-black text-xs font-orbitron mb-1">MAR 25</p>
-                        <h4 class="text-xl font-bold font-orbitron uppercase">Hackathon Day</h4>
-                        <p class="text-gray-400 text-sm">Report (10 pages) & Presentation.</p>
-                    </div>
-                    <div class="timeline-node"><div class="node-dot"></div></div>
-                    <div class="timeline-content pl-12 hidden md:block"><span class="text-xs font-bold text-gray-500">DEPLOY</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <section class="py-32 px-6" id="challenges">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
-                    <div class="h-56 overflow-hidden relative">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoxugbHzBNQjieNi4jUtGcjX2ogwgambxNjAKEgOXSLF2-RjDcZ5Zk0nuCHT70govvC87JRxdwLWKf3C0B98QPQXUrqjWxaLMD0MqVdf1QGj9kghOjfAyotaGpMRKQrRb5xoN9ie-0QLRRM-NgJ0lvzrJNojnj5N-WU1cUvhavnaCn4fu4npHPecmEJH6q2F-5H1SQdL8vz1-pa-F6vUq01WNoBCB-hnHiAZ0PcX-Laii_8EHlro-2XR37gw8MgAEpreOXRQX9BJEb" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
-                    </div>
-                    <div class="p-8 relative">
-                        <h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Dust Storm Resiliency</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8">Design a shelter capable of withstanding 100km/h winds and fine particle infiltration.</p>
-                        <button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
-                    </div>
-                </div>
-                <div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
-                    <div class="h-56 overflow-hidden relative">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFk5ruent_HYQWVeaVjATVPZ6iaKO-R52y91NUS4bMBqY-ZGSv3BsXvzi8U5GQlVB9tBHr0gdM0vMAgKjGxp1ekVDBj9jfr437Ot8sfcqgQ12_-hAhpBkm10UMOaH268qifOsLAYK0PjOPwyuSFa37lR963J9DD-CjvaMAgFVi6zQvltXNb_HCuMJMSiqlQjm7QfDRsUJ53N52F25sosL5pKavaTWo_xFCyn3TnuYKKKu2snNSNR4Vx2PJVSZgX_wTnqPqGcqMEztq" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
-                    </div>
-                    <div class="p-8 relative">
-                        <h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Solar Flare Shielding</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8">Develop a temporary habitat with high radiation attenuation factors for crew safety.</p>
-                        <button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
-                    </div>
-                </div>
-                <div class="glass-panel rounded-2xl overflow-hidden group hover:scale-[1.02] transform transition-all duration-500 gs-card-stagger">
-                    <div class="h-56 overflow-hidden relative">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1rHWvZfL8tonrWqjj0tJO547hCaRoWpPDmzjVuCaraXHzcaEt6vjPL32AkkY9TReBamjNWtjXgdq3Um76PUFZRMRFaRBmM-Zjrq4QjmwBzHQXVGfzWRAXetiWAsZtkQhov5rUoWInK83HlAnVqBIMdWD5pWT16eGQZVTerLKXgpPKhsnGEVyxgnW5abkz-IjtT5mp-J2A2fv5lXTBbW5anKZEyVNfSoopxN-zGy7MZ0UtIILLKa2eAPwUbmJA5cNhJsQDq2mMZ9x9" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
-                    </div>
-                    <div class="p-8 relative">
-                        <h4 class="text-2xl font-black font-orbitron mb-4 text-white uppercase italic">Life Support Loss</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8">Propose a deployable shelter focused on passive insulation for thermal survival.</p>
-                        <button class="w-full border border-accent-mars/50 py-3 rounded-lg text-accent-mars font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all hover:shadow-[0_0_15px_rgba(196,30,58,0.5)]">Analyze Scenario</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW: TETRAHEDRON LOCK FOR REWARDS -->
-    <section id="rewards-gateway" class="shape-lock-container">
-        <div class="text-center mb-8">
-            <h3 class="text-2xl font-black text-accent-gold font-orbitron uppercase">PRIZE VAULT LOCKED</h3>
-            <p class="text-xs text-white/50 tracking-[0.3em] mt-2">DECRYPT GEOMETRY TO VIEW</p>
-        </div>
-        
-        <div class="tetra-scene" onclick="unlockRewards()">
-            <div class="tetra">
-                <div class="tetra-face"></div>
-                <div class="tetra-face"></div>
-                <div class="tetra-face"></div>
-                <div class="tetra-face"></div>
-            </div>
-        </div>
-        <p class="text-gray-500 mt-8 font-mono text-[10px] tracking-widest">CLICK TETRAHEDRON TO BLAST</p>
-
-        <script>
-            function unlockRewards() {
-                const scene = document.querySelector('.tetra-scene');
-                const tetra = document.querySelector('.tetra');
-                const container = document.getElementById('rewards-gateway');
-                
-                // Hide solid shape
-                tetra.style.display = 'none';
-
-                // Explosion Shards
-                const shardCount = 20;
-                for (let i = 0; i < shardCount; i++) {
-                    const shard = document.createElement('div');
-                    shard.classList.add('mirror-shard');
-                    shard.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)'; // Triangle
-                    
-                    const size = Math.random() * 40 + 20 + 'px';
-                    shard.style.width = size; shard.style.height = size;
-                    shard.style.left = '50%'; shard.style.top = '50%';
-                    shard.style.transform = 'translate(-50%, -50%)';
-                    scene.appendChild(shard);
-
-                    gsap.to(shard, {
-                        x: gsap.utils.random(-600, 600),
-                        y: gsap.utils.random(-600, 600),
-                        z: gsap.utils.random(-400, 400),
-                        rotationX: gsap.utils.random(0, 720),
-                        rotationY: gsap.utils.random(0, 720),
-                        scale: 0, opacity: 0,
-                        duration: gsap.utils.random(1, 1.5),
-                        ease: "power3.out",
-                        onComplete: () => shard.remove()
-                    });
-                }
-
-                // REVEAL PHASE 2
+                // 4. HIDE SECTION AND SHOW CONTENT
                 setTimeout(() => {
-                    container.style.display = 'none';
-                    const phase2 = document.getElementById('locked-phase-2');
-                    phase2.style.display = 'block';
-                    ScrollTrigger.refresh();
-                    gsap.from(phase2, { opacity: 0, y: 50, duration: 1 });
+                    container.style.display = "none";
+
+                    const lockedContent = document.getElementById("locked-site-content");
+                    if (lockedContent) {
+                        lockedContent.style.display = "block";
+                        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+
+                        // Smooth fade in
+                        gsap.to("#mission", { opacity: 1, duration: 1 });
+
+                        const missionSection = document.getElementById('mission');
+                        if (missionSection) missionSection.scrollIntoView({ behavior: 'smooth' });
+                    }
                 }, 800);
             }
         </script>
+        <style>
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: var(--accent-cyan);
+                box-shadow: 0 0 10px var(--accent-cyan);
+            }
+        </style>
     </section>
 
-    <!-- LOCKED PHASE 2 WRAPPER -->
-    <div id="locked-phase-2" style="display: none;">
-        <!-- REWARDS -->
-        <section class="stack-wrapper" id="rewards">
-            <div class="text-center py-20 sticky top-0 z-10 pointer-events-none bg-gradient-to-b from-[#1a0500] to-transparent">
-                <h2 class="text-7xl font-black font-orbitron italic uppercase">REWARDS_POOL</h2>
-            </div>
-            <div class="stack-card">
-                <div class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-accent-gold shadow-2xl flex items-center gap-12">
-                    <div class="text-8xl font-black text-accent-gold font-orbitron">01</div>
-                    <div>
-                        <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">GRAND_PRIZE</h3>
-                        <p class="text-2xl text-gray-400 mb-6 font-display">₹1,00,000+ Total Valuation including cash and investor hours.</p>
-                        <div class="flex gap-4">
-                            <span class="bg-accent-gold/20 text-accent-gold px-4 py-1 rounded text-xs font-bold font-orbitron uppercase">CASH: ₹50K</span>
-                            <span class="bg-accent-gold/20 text-accent-gold px-4 py-1 rounded text-xs font-bold font-orbitron uppercase">40H CONSULTANCY</span>
+    <!-- WRAPPER FOR LOCKED CONTENT PHASE 1 -->
+    <div id="locked-site-content" style="display: none;">
+
+        <!-- MISSION / PROPOSAL -->
+        <section class="py-24 px-6 relative z-10 overflow-hidden" id="mission" style="opacity: 0;">
+            <!-- PARALLAX BACKGROUND -->
+            <div class="parallax-mission-bg"></div>
+
+            <!-- NEW HEADER & COUNTDOWN -->
+            <div class="max-w-7xl mx-auto mb-20">
+                <div
+                    class="flex flex-col md:flex-row justify-between items-center border-b border-white/10 pb-10 gap-10">
+                    <div class="text-left">
+                        <h2 class="text-9xl font-black font-orbitron italic uppercase tracking-tighter">THE MISSION</h2>
+                        <p class="text-accent-gold tracking-[0.4em] font-bold text-sm mt-2">T-MINUS TO LAUNCH</p>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="countdown-box">
+                            <div id="cd-days" class="countdown-val">00</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div id="cd-hours" class="countdown-val">00</div>
+                            <div class="countdown-label">HOURS</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div id="cd-minutes" class="countdown-val">00</div>
+                            <div class="countdown-label">MINUTES</div>
+                        </div>
+                        <div class="countdown-box">
+                            <div id="cd-seconds" class="countdown-val">00</div>
+                            <div class="countdown-label">SECONDS</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="stack-card">
-                <div class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-primary shadow-2xl flex items-center gap-12">
-                    <div class="text-8xl font-black text-primary font-orbitron">02</div>
-                    <div>
-                        <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">INTERNSHIPS</h3>
-                        <p class="text-2xl text-gray-400 mb-6 font-display">Direct internship opportunities with Aerospace partner firms for top 3 squads.</p>
-                        <div class="flex gap-4">
-                            <span class="bg-primary/20 text-primary px-4 py-1 rounded text-xs font-bold font-orbitron uppercase">INDUSTRY ACCESS</span>
+
+            <!-- Script for Countdown -->
+            <script>
+                const targetDate = new Date("March 23, 2026 09:00:00").getTime();
+                setInterval(function () {
+                    const now = new Date().getTime();
+                    const distance = targetDate - now;
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    document.getElementById("cd-days").innerText = days < 10 ? "0" + days : days;
+                    document.getElementById("cd-hours").innerText = hours < 10 ? "0" + hours : hours;
+                    document.getElementById("cd-minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                    document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+                }, 1000);
+
+                gsap.to(".parallax-mission-bg", {
+                    yPercent: 30,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: "#mission",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            </script>
+
+            <!-- EXISTING CONTENT -->
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8 gs-reveal-left">
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <button onclick="openBriefing('mission_overview')"
+                            class="flex-1 py-6 border border-accent-mars/30 text-accent-mars font-orbitron font-black text-sm uppercase tracking-[0.3em] hover:bg-accent-mars hover:text-black transition-all hover:shadow-[0_0_30px_rgba(196,30,58,0.4)] hud-glitch-hover relative overflow-hidden group">
+                            <span class="relative z-10">MISSION OVERVIEW</span>
+                            <div
+                                class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0] transition-transform duration-500">
+                            </div>
+                        </button>
+                        <button onclick="openBriefing('mission_brief')"
+                            class="flex-1 py-6 border border-accent-cyan/30 text-accent-cyan font-orbitron font-black text-sm uppercase tracking-[0.3em] hover:bg-accent-cyan hover:text-black transition-all hover:shadow-[0_0_30px_rgba(0,243,255,0.4)] hud-glitch-hover relative overflow-hidden group">
+                            <span class="relative z-10">MISSION BRIEF</span>
+                            <div
+                                class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0] transition-transform duration-500">
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="glass-panel p-8 border-l-4 border-accent-gold relative group overflow-hidden">
+                        <div
+                            class="absolute top-0 right-0 p-3 text-[10px] text-accent-gold/20 font-mono tracking-widest">
+                            SQUAD_REQUIREMENTS</div>
+                        <h4 class="text-2xl font-black font-orbitron text-white mb-4 uppercase italic">Team Structure
+                        </h4>
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-16 h-16 rounded-lg bg-accent-gold/10 flex items-center justify-center border border-accent-gold/20">
+                                <span class="material-icons text-accent-gold text-3xl">groups</span>
+                            </div>
+                            <div>
+                                <p class="text-xl font-bold text-white font-display">5 Members per Team</p>
+                                <p class="text-sm text-gray-400 font-mono mt-1">Interdisciplinary thinking is encouraged
+                                </p>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=AEROCREST+2026&dates=20260325T033000Z/20260325T123000Z&details=M.A.R.S+%E2%80%93+Mars+Atmospheric+Resilient+Shelter+Hackathon+at+BSA+Crescent+Institute.&location=BSA+Crescent+Institute+Of+Science+And+Technology,+Vandalur,+Tamil+Nadu+600048"
+                            target="_blank"
+                            class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-all duration-300 group/date rounded-[2rem] flex flex-col justify-center items-center text-center hover:scale-105 hover:shadow-[0_0_30px_rgba(196,30,58,0.3)] border-primary/30 min-h-[120px]">
+                            <p
+                                class="text-[10px] text-accent-mars font-bold font-orbitron uppercase tracking-widest mb-1">
+                                Event Date</p>
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons text-primary text-xl">calendar_today</span>
+                                <p class="font-bold text-white font-orbitron">March 25, 2026</p>
+                            </div>
+                            <p class="text-[8px] text-white/30 font-mono mt-2 uppercase tracking-tighter">Click to add
+                                to calendar</p>
+                        </a>
+                        <a href="https://www.google.com/maps/dir//B.+S.+Abdur+Rahman+Crescent+Institute+Of+Science+And+Technology,+120+Seethakathi+Estate,+GST+Rd,+Vandalur,+Tamil+Nadu+600048/@13.0925053,80.2432831,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3a52f60e8ef70dad:0x1b7886934a452db8!2m2!1d80.0837794!2d12.8753945?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            class="p-4 glass-panel border-l-2 border-primary hover:bg-primary/10 transition-all duration-300 group/venue rounded-[2rem] flex flex-col justify-center items-center text-center hover:scale-105 hover:shadow-[0_0_30px_rgba(196,30,58,0.3)] border-primary/30 min-h-[120px]">
+                            <p
+                                class="text-[10px] text-accent-mars font-bold font-orbitron uppercase tracking-widest mb-1">
+                                Venue</p>
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons text-primary text-xl">location_on</span>
+                                <p class="font-bold text-white font-orbitron">BSA Crescent Institute</p>
+                            </div>
+                            <p class="text-[8px] text-white/30 font-mono mt-2 uppercase tracking-tighter">Click to
+                                Navigate</p>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="stack-card">
-                <div class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-white shadow-2xl flex items-center gap-12">
-                    <div class="text-8xl font-black text-white font-orbitron">03</div>
-                    <div>
-                        <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">SQUAD_GEAR</h3>
-                        <p class="text-2xl text-gray-400 mb-6 font-display">Official Mission Patches, Kits, and Certification from Crescent Aerospace.</p>
-                        <div class="flex gap-4">
-                            <span class="bg-white/20 text-white px-4 py-1 rounded text-xs font-bold font-orbitron uppercase">LIMITED EDITION</span>
-                        </div>
+        </section>
+        <!-- TIMELINE & CHALLENGES -->
+        <section class="bg-black/40 timeline-section" id="timeline">
+            <div class="timeline-horizontal">
+                <!-- Header Card -->
+                <div class="h-timeline-item flex items-center justify-center">
+                    <h2 class="text-[12rem] font-black font-orbitron italic uppercase tracking-tighter">
+                        Mission<br>Timeline
+                    </h2>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-mars font-mono text-lg md:text-xl mb-4">FEB 22_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Registration opening</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Squad registration gateway
+                            initialized.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-mars font-mono text-lg md:text-xl mb-4">MAR 12_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Registration Close</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Transmission window closes. No
+                            further crew additions
+                            authorized.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-gold font-mono text-lg md:text-xl mb-4">MAR 01_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Problem Statement Release
+                        </h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Problem statements released to
+                            verified squads.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-mars font-mono text-lg md:text-xl mb-4">MAR 14_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Webinar-I (10.30 am)</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Expert council briefing. 10:30
+                            AM IST. Mandatory
+                            presence.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-mars font-mono text-lg md:text-xl mb-4">MAR 15_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Webinar-II (10.30 am)</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Expert council briefing. 10:30
+                            AM IST. Mandatory
+                            presence.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-mars font-mono text-lg md:text-xl mb-4">MAR 20_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Round-I </h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Initial prototypes and design
+                            docs due by 18:30 IST.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-accent-gold font-mono text-lg md:text-xl mb-4">MAR 21_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Result Publishment</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">Finalist squads announced.
+                            Martian Council verification
+                            completed.</p>
+                    </div>
+                </div>
+
+                <div class="h-timeline-item flex items-center">
+                    <div class="h-timeline-content">
+                        <div class="h-timeline-node"></div>
+                        <p class="text-primary font-mono text-lg md:text-xl mb-4">MAR 25_2026</p>
+                        <h4 class="text-3xl md:text-5xl font-bold font-orbitron uppercase">Hackathon</h4>
+                        <p class="text-gray-400 text-lg md:text-2xl mt-4 leading-relaxed">On-site at
+                            <a href="https://www.google.com/maps/dir//B.+S.+Abdur+Rahman+Crescent+Institute+Of+Science+And+Technology,+120+Seethakathi+Estate,+GST+Rd,+Vandalur,+Tamil+Nadu+600048/@13.0925053,80.2432831,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3a52f60e8ef70dad:0x1b7886934a452db8!2m2!1d80.0837794!2d12.8753945?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D"
+                                target="_blank" class="text-primary hover:underline transition-all">BSA Crescent
+                                Institute</a>.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- GALLERY -->
-        <section class="py-32 px-6 bg-black/30" id="gallery">
-    <div class="max-w-7xl mx-auto">
-        <h2 class="text-center text-5xl font-black font-orbitron mb-16 italic uppercase tracking-tighter gs-fade-up">MISSION_MOMENTS</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            <div class="col-span-2 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
-                <img src="1.jpg" alt="Mission Control" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        <section class="py-32 px-6" id="challenges">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-16 text-center">
+                    <h2 class="text-9xl font-black font-orbitron italic uppercase tracking-tighter">Mission Objectives
+                    </h2>
+                    <p class="text-accent-cyan font-mono text-xs tracking-[0.5em] mt-4 uppercase">Select target for
+                        briefing</p>
+                </div>
+
+                <div class="challenges-grid">
+                    <!-- Card 1 -->
+                    <div class="challenge-card tech-border glass-panel p-8 gs-card-stagger">
+                        <div>
+                            <div class="h-64 mb-6 overflow-hidden bg-black/40 tech-border relative group">
+                                <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=800"
+                                    class="w-full h-full object-cover grayscale blur-[2px] group-hover:blur-0 transition-all duration-700">
+                                <div
+                                    class="absolute inset-0 bg-accent-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span
+                                        class="text-white font-orbitron font-black text-xl tracking-widest opacity-30">REDACTED</span>
+                                </div>
+                            </div>
+                            <h4
+                                class="text-3xl font-black font-orbitron mb-4 text-accent-cyan uppercase tracking-tighter">
+                                Phase_01</h4>
+                        </div>
+                        <button onclick="openBriefing('borehole')"
+                            class="w-full py-4 border border-accent-cyan/30 text-accent-cyan font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-accent-cyan hover:text-black transition-all hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] hud-glitch-hover relative overflow-hidden group">
+                            <span class="relative z-10">REVEALED SOON</span>
+                            <div
+                                class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0] transition-transform duration-500">
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="challenge-card tech-border glass-panel p-8 gs-card-stagger">
+                        <div>
+                            <div class="h-64 mb-6 overflow-hidden bg-black/40 tech-border relative group">
+                                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800"
+                                    class="w-full h-full object-cover grayscale blur-[2px] group-hover:blur-0 transition-all duration-700">
+                                <div
+                                    class="absolute inset-0 bg-accent-gold/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span
+                                        class="text-white font-orbitron font-black text-xl tracking-widest opacity-30">REDACTED</span>
+                                </div>
+                            </div>
+                            <h4
+                                class="text-3xl font-black font-orbitron mb-4 text-accent-gold uppercase tracking-tighter">
+                                Phase_02</h4>
+                        </div>
+                        <button onclick="openBriefing('relay')"
+                            class="w-full py-4 border border-accent-gold/30 text-accent-gold font-orbitron font-bold text-xs uppercase tracking-widest hover:bg-accent-gold hover:text-black transition-all hover:shadow-[0_0_20px_rgba(255,140,0,0.4)] hud-glitch-hover relative overflow-hidden group">
+                            <span class="relative z-10">REVEALED SOON</span>
+                            <div
+                                class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0] transition-transform duration-500">
+                            </div>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="2.jpg" alt="Space" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="3.jpg" alt="Mars Surface" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="4.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="5.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="6.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-2 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="7.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="8.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="9.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="10.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
-            <div class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger"><img src="11.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"></div>
+        </section>
+
+        <!-- MISSION BRIEFING MODAL -->
+        <div id="mission-briefing"
+            class="fixed inset-0 z-[500] flex flex-col items-center justify-start md:justify-center p-4 md:p-10 bg-black/95 pointer-events-none opacity-0 transition-all duration-500 overflow-y-auto">
+            <div
+                class="briefing-content max-w-3xl w-full p-1 border-2 border-primary/20 bg-black relative overflow-visible pointer-events-none my-auto">
+                <!-- Glitch Overlay -->
+                <div
+                    class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none">
+                </div>
+
+                <div class="p-4 md:p-8 border border-accent-cyan/10 relative z-10">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-2 h-10 bg-primary shadow-[0_0_15px_#c41e3a]"></div>
+                            <div>
+                                <h3 id="brief-title"
+                                    class="text-4xl font-black text-white font-orbitron uppercase tracking-tighter">
+                                </h3>
+                            </div>
+                        </div>
+                        <button onclick="closeBriefing()"
+                            class="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <span class="material-icons text-sm text-white/50">close</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 mb-10 font-mono">
+                    </div>
+
+                    <div class="min-h-[100px] mb-6 overflow-y-auto max-h-[60vh] md:max-h-[40vh] pr-4 custom-scrollbar">
+                        <p id="brief-desc" class="text-gray-400 font-modern text-sm leading-relaxed"></p>
+                    </div>
+
+                    <div class="p-6 bg-primary/5 border-l-2 border-primary relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 text-[8px] text-primary/20 font-mono">CONFIDENTIAL
+                        </div>
+                        <span
+                            class="text-[10px] text-primary font-bold block mb-2 tracking-[0.2em] font-orbitron">PRIMARY
+                            MISSION GOAL</span>
+                        <p id="brief-goal" class="text-white text-base font-bold italic font-orbitron"></p>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-center flex-wrap gap-4">
+                        <div class="flex gap-2">
+                            <div class="w-1 h-1 bg-primary"></div>
+                            <div class="w-1 h-1 bg-primary/50"></div>
+                            <div class="w-1 h-1 bg-primary/20"></div>
+                        </div>
+                        <button id="brief-confirm-btn" onclick="closeBriefing()"
+                            class="px-12 py-4 bg-primary text-white font-orbitron font-black text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(196,30,58,0.3)]">
+                            Confirm Intelligence
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Corner Ornaments -->
+                <div class="absolute top-0 right-0 w-20 h-20 border-t border-r border-primary/30 pointer-events-none">
+                </div>
+                <div class="absolute bottom-0 left-0 w-20 h-20 border-b border-l border-primary/30 pointer-events-none">
+                </div>
+            </div>
         </div>
-    </div>
-</section>
 
-        <!-- TEAM & SPEAKERS -->
-        <section class="py-32 px-6 relative z-10" id="team">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-center text-5xl font-black font-orbitron mb-24 italic uppercase tracking-tighter">Mission_Leadership</h2>
-                <div class="mb-24">
-                    <div class="flex items-center justify-center gap-4 mb-12 opacity-80"><div class="h-[1px] w-12 bg-accent-gold"></div><h3 class="text-xl font-orbitron text-accent-gold uppercase tracking-[0.2em] font-bold">Faculty Members</h3><div class="h-[1px] w-12 bg-accent-gold"></div></div>
-                    <div class="flex flex-wrap justify-center gap-10 md:gap-20">
-                            <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10"><img src="faculty-1.jpg" class="w-full h-full object-cover"></div>
-                            <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Dr.Magesh</h4><p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Head of the Department</p>
-                        </div>
-                        <div class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10"><img src="faculty-2.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Mr.Venkataramanan</h4><p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Assistant Professor</p>
+        <!-- NEW: TETRAHEDRON LOCK FOR REWARDS -->
+        <section id="rewards-gateway" class="shape-lock-container">
+            <div class="text-center mb-8">
+                <p class="text-xs text-white/50 tracking-[0.3em] mt-2">DECRYPT GEOMETRY TO VIEW</p>
+            </div>
+
+            <div class="tetra-scene" onclick="unlockRewards()">
+                <div class="tetra">
+                    <div class="tetra-face"></div>
+                    <div class="tetra-face"></div>
+                    <div class="tetra-face"></div>
+                    <div class="tetra-face"></div>
+                </div>
+            </div>
+            <p class="text-gray-500 mt-8 font-mono text-[10px] tracking-widest">CLICK TETRAHEDRON TO BLAST</p>
+
+            <script>
+                function unlockRewards() {
+                    const scene = document.querySelector('.tetra-scene');
+                    const tetra = document.querySelector('.tetra');
+                    const container = document.getElementById('rewards-gateway');
+
+                    // Hide solid shape
+                    tetra.style.display = 'none';
+
+                    // Explosion Shards
+                    const shardCount = 20;
+                    for (let i = 0; i < shardCount; i++) {
+                        const shard = document.createElement('div');
+                        shard.classList.add('mirror-shard');
+                        shard.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)'; // Triangle
+
+                        const size = Math.random() * 40 + 20 + 'px';
+                        shard.style.width = size; shard.style.height = size;
+                        shard.style.left = '50%'; shard.style.top = '50%';
+                        shard.style.transform = 'translate(-50%, -50%)';
+                        scene.appendChild(shard);
+
+                        gsap.to(shard, {
+                            x: gsap.utils.random(-600, 600),
+                            y: gsap.utils.random(-600, 600),
+                            z: gsap.utils.random(-400, 400),
+                            rotationX: gsap.utils.random(0, 720),
+                            rotationY: gsap.utils.random(0, 720),
+                            scale: 0, opacity: 0,
+                            duration: gsap.utils.random(1, 1.5),
+                            ease: "power3.out",
+                            onComplete: () => shard.remove()
+                        });
+                    }
+
+                    // REVEAL PHASE 2
+                    setTimeout(() => {
+                        container.style.display = 'none';
+                        const phase2 = document.getElementById('locked-phase-2');
+                        phase2.style.display = 'block';
+                        ScrollTrigger.refresh();
+                        gsap.from(phase2, { opacity: 0, y: 50, duration: 1 });
+                    }, 800);
+                }
+            </script>
+        </section>
+
+        <!-- LOCKED PHASE 2 WRAPPER -->
+        <div id="locked-phase-2" style="display: none;">
+            <!-- REWARDS -->
+            <section class="stack-wrapper" id="rewards">
+                <div
+                    class="text-center py-20 sticky top-0 z-10 pointer-events-none bg-gradient-to-b from-[#1a0500] to-transparent">
+                    <h2 class="text-9xl font-black font-orbitron italic uppercase">REWARDS_POOL</h2>
+                </div>
+                <div class="stack-card">
+                    <div
+                        class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-accent-gold shadow-2xl flex items-center gap-12">
+                        <div class="text-8xl font-black text-accent-gold font-orbitron">01</div>
+                        <div>
+                            <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">GRAND_PRIZE</h3>
+                            <p class="text-2xl text-gray-400 mb-6 font-display">EXCITING CASH PRIZES WILL BE REVEALED
+                                SOON — GET READY TO COMPETE!</p>
+                            <div class="flex gap-4">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="flex items-center justify-center gap-4 mb-12 opacity-80"><div class="h-[1px] w-12 bg-white/30"></div><h3 class="text-xl font-orbitron text-white/70 uppercase tracking-[0.2em] font-bold">Students Organizers</h3><div class="h-[1px] w-12 bg-white/30"></div></div>
-                    <div class="flex flex-wrap justify-center gap-6">
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-1.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Abdul Riyaz</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Mission Director</p>
-                        </div>
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-2.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Hari Sree Charan</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Tech Lead</p>
-                        </div>
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-3.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Abdul Azeez</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Ops Head</p>
-                        </div>
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-4.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Mukeshwaran</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Design Lead</p>
-                        </div>
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-1.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Tejasree</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Mission Director</p>
-                        </div>
-                        <div class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
-                            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10"><img src="student-5.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                            <h4 class="font-bold font-orbitron text-white">Harini Sree</h4><p class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">Logistics</p>
+                <div class="stack-card">
+                    <div
+                        class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-primary shadow-2xl flex items-center gap-12">
+                        <div class="text-8xl font-black text-primary font-orbitron">02</div>
+                        <div>
+                            <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">CERTIFICATES</h3>
+                            <p class="text-2xl text-gray-400 mb-6 font-display">Special recognition certificates will be
+                                awarded to the top 3 squads.</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+                <div class="stack-card">
+                    <div
+                        class="w-[90%] md:w-[60%] h-[400px] glass-morphism rounded-[40px] p-12 border-t-4 border-white shadow-2xl flex items-center gap-12">
+                        <div class="text-8xl font-black text-white font-orbitron">03</div>
+                        <div>
+                            <h3 class="text-5xl font-black font-orbitron mb-4 uppercase">SQUAD_GEAR</h3>
+                            <p class="text-2xl text-gray-400 mb-6 font-display">Official Mission Kits from Crescent
+                                Aerospace.</p>
 
-        <section class="py-32 px-6" id="speakers">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-center text-5xl font-black font-orbitron mb-20 italic uppercase tracking-tighter gs-reveal-up">Martian_Council</h2>
-                <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger"><div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div><h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4><p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert I</p></div>
-                    <div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger"><div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div><h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4><p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert II</p></div>
-                    <div class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger"><div class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300"><span class="material-icons text-5xl">person</span></div><h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4><p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert III</p></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <footer class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center relative z-20">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                <span class="text-xl font-bold tracking-tighter text-white font-orbitron uppercase">AEROCREST <span class="text-primary">2026</span></span>
-                <p class="text-gray-500 font-bold uppercase text-[9px] tracking-[0.4em] hover:text-white transition-colors">BSA Crescent Aerospace © 2026 // Nominal Ops.</p>
-            </div>
-        </footer>
-    </div> <!-- END LOCKED PHASE 2 -->
-</div> <!-- END LOCKED SITE CONTENT -->
+            <!-- GALLERY -->
+            <section class="py-32 px-6 bg-black/30" id="gallery">
+                <div class="max-w-7xl mx-auto">
+                    <h2
+                        class="text-center text-7xl font-black font-orbitron mb-16 italic uppercase tracking-tighter gs-fade-up">
+                        PREVIOUS_EVENTS</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                        <div
+                            class="col-span-2 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/1.jpg" alt="Mission Control"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/2.jpg" alt="Space"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/3.jpg" alt="Mars Surface"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/4.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/5.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-2 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/6.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-2 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/7.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/8.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/9.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/10.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div
+                            class="col-span-1 row-span-1 relative group rounded-xl overflow-hidden border border-white/10 gs-card-stagger">
+                            <img src="assets/11.jpg"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-<script>
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
+            <!-- TEAM & SPEAKERS -->
+            <section class="py-32 px-6 relative z-10" id="team">
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="text-center text-5xl font-black font-orbitron mb-24 italic uppercase tracking-tighter">
+                        Mission_Leaders</h2>
+                    <div class="mb-24">
+                        <div class="flex items-center justify-center gap-4 mb-12 opacity-80">
+                            <div class="h-[1px] w-12 bg-accent-gold"></div>
+                            <h3 class="text-xl font-orbitron text-accent-gold uppercase tracking-[0.2em] font-bold">
+                                Faculty Members</h3>
+                            <div class="h-[1px] w-12 bg-accent-gold"></div>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-10 md:gap-20">
+                            <div
+                                class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
+                                <div
+                                    class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50">
+                                </div>
+                                <div
+                                    class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10">
+                                    <img src="assets/faculty-1.jpg" class="w-full h-full object-cover">
+                                </div>
+                                <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Dr.Magesh</h4>
+                                <p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Head of the
+                                    Department</p>
+                            </div>
+                            <div
+                                class="glass-panel p-8 rounded-2xl text-center w-full max-w-xs hover:border-primary/50 transition-all duration-500 group hover:transform hover:-translate-y-2 relative overflow-hidden">
+                                <div
+                                    class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50">
+                                </div>
+                                <div
+                                    class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-primary/30 mb-6 group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(196,30,58,0.4)] transition-all duration-500 bg-white/10">
+                                    <img src="assets/faculty-2.jpg"
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                                </div>
+                                <h4 class="text-2xl font-bold font-orbitron text-white mb-2">Mr.Venkataramanan</h4>
+                                <p class="text-sm text-accent-mars font-bold uppercase tracking-widest">Assistant
+                                    Professor</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center gap-4 mb-12 opacity-80">
+                            <div class="h-[1px] w-12 bg-white/30"></div>
+                            <h3 class="text-xl font-orbitron text-white/70 uppercase tracking-[0.2em] font-bold">
+                                Students Organizers</h3>
+                            <div class="h-[1px] w-12 bg-white/30"></div>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-6">
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/abdul-riyaz-215467343" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-1.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Abdul Riyaz</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Tech Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+919176513883"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/hari-sree-charan-437b14330" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-1.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Hari Sree Charan</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Tech Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+917305616796"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/abdul-azeez-7631a22b4" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-3.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Abdul Azeez</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Registration Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:9840572075"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/tejasree-g-40a2882bb" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-2.png" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Tejasree</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Design Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+918072833113"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/mukeshwaran-k-733109333" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-6.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Mukeshwaran</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Marketing Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+918248513169"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/keerthana04aero" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-4.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Keerthana</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Finance Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+917904933680"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/abinaya-kumar-a821b3300" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-1.jpeg" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Abinaya</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Social Media Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+917200051303"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="glass-panel p-6 rounded-xl text-center w-64 hover:bg-white/5 transition-all duration-300 group border-t border-transparent hover:border-accent-gold/30">
+                                <a href="https://www.linkedin.com/in/dinesh-e-6bbbb831a" target="_blank"
+                                    class="block w-32 h-32 mx-auto rounded-full overflow-hidden border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 bg-white/10">
+                                    <img src="assets/student-5.png" class="w-full h-full object-cover">
+                                </a>
+                                <h4 class="font-bold font-orbitron text-white">Dinesh</h4>
+                                <p
+                                    class="text-[10px] text-gray-400 font-bold uppercase mt-1 tracking-wider group-hover:text-accent-gold transition-colors">
+                                    Sponsorship Head</p>
+                                <div class="mt-4 flex flex-col items-center gap-2">
+                                    <a href="tel:+916381358227"
+                                        class="w-8 h-8 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan hover:bg-accent-cyan hover:text-black transition-all">
+                                        <span class="material-icons text-sm">phone</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-// --- PARTICLE SYSTEM (Space Dust) ---
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-let width, height;
-let particles = [];
+            <section class="py-32 px-6" id="speakers">
+                <div class="max-w-7xl mx-auto">
+                    <h2
+                        class="text-center text-5xl font-black font-orbitron mb-20 italic uppercase tracking-tighter gs-reveal-up">
+                        Martian_Council</h2>
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div
+                            class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+                            <div
+                                class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300">
+                                <span class="material-icons text-5xl">person</span>
+                            </div>
+                            <h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert I</p>
+                        </div>
+                        <div
+                            class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+                            <div
+                                class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300">
+                                <span class="material-icons text-5xl">person</span>
+                            </div>
+                            <h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert II</p>
+                        </div>
+                        <div
+                            class="glass-panel p-10 rounded-3xl border-dashed border-white/20 hover:border-accent-gold hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-500 gs-card-stagger">
+                            <div
+                                class="w-32 h-32 bg-white/5 rounded-full mx-auto mb-6 flex items-center justify-center grayscale opacity-30 hover:opacity-100 transition-opacity duration-300">
+                                <span class="material-icons text-5xl">person</span>
+                            </div>
+                            <h4 class="font-bold font-orbitron text-accent-gold">REDACTED</h4>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mt-2">Mystery Expert III</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-function resize() {
-width = canvas.width = window.innerWidth;
-height = canvas.height = window.innerHeight;
-}
+            <footer class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center relative z-20">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <span class="text-xl font-bold tracking-tighter text-white font-orbitron uppercase">AEROCREST <span
+                            class="text-primary">2026</span></span>
+                    <p
+                        class="text-gray-500 font-bold uppercase text-[9px] tracking-[0.4em] hover:text-white transition-colors">
+                        BSA Crescent Aerospace © 2026 // Nominal Ops.</p>
+                </div>
+            </footer>
+        </div> <!-- END LOCKED PHASE 2 -->
+    </div> <!-- END LOCKED SITE CONTENT -->
 
-class Particle {
-constructor() {
-this.x = Math.random() * width;
-this.y = Math.random() * height;
-this.size = Math.random() * 2;
-this.speedY = Math.random() * 0.5 + 0.1;
-this.opacity = Math.random() * 0.5 + 0.1;
-}
-update() {
-this.y -= this.speedY;
-if (this.y < 0) this.y = height;
-}
-draw() {
-ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
-ctx.beginPath();
-ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-ctx.fill();
-}
-}
+    <script>
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-function initParticles() {
-for(let i=0; i<100; i++) particles.push(new Particle());
-}
-function animateParticles() {
-ctx.clearRect(0,0,width,height);
-particles.forEach(p => { p.update(); p.draw(); });
-requestAnimationFrame(animateParticles);
-}
+        // --- CINEMATIC BOOT-UP SEQUENCE ---
+        function runBootSequence() {
+            const bootTl = gsap.timeline({
+                onComplete: () => {
+                    gsap.to("#boot-loader", {
+                        yPercent: -100,
+                        duration: 1.2,
+                        ease: "power4.inOut",
+                        onComplete: () => {
+                            document.getElementById('boot-loader').remove();
+                            document.getElementById('main-body').classList.remove('opacity-0');
+                            startHeroSequence();
+                        }
+                    });
+                }
+            });
 
-window.addEventListener('resize', resize);
-resize();
-initParticles();
-animateParticles();
+            const bootLogs = [
+                "INITIALIZING MISSION_CONTROL_V2.0...",
+                "LOADING MARS_ATMOSPHERIC_DATA...",
+                "CONNECTING TO ORIENT_INSTITUE_NODE...",
+                "SYNCHRONIZING SATELLITE_UPLINK...",
+                "READY TO LAUNCH."
+            ];
 
-// --- ANIMATIONS ---
+            bootLogs.forEach((log, i) => {
+                bootTl.to("#boot-text", {
+                    duration: 0.6,
+                    text: log,
+                    ease: "none"
+                }, i * 0.8);
+            });
 
-// 1. Hero Reveal Sequence
-const tl = gsap.timeline();
-tl.to(".nav-wrapper", { opacity: 1, duration: 1, ease: "power2.out" })
-.to(".hero-badge", { opacity: 1, duration: 0.5 }, "-=0.5")
-.from(".hero-title span", {
-y: 100,
-opacity: 0,
-duration: 1.2,
-stagger: 0.2,
-ease: "power4.out"
-}, "-=0.3")
-.to(".hero-subtitle", { opacity: 1, duration: 0.8 }, "-=0.5")
-.to(".hero-buttons", { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }, "-=0.5");
+            bootTl.to("#boot-progress", {
+                width: "100%",
+                duration: bootLogs.length * 0.8,
+                ease: "power2.inOut"
+            }, 0);
 
-// 2. Typewriter Effect for Section Headers
-gsap.utils.toArray(".typing-effect").forEach(text => {
-gsap.from(text, {
-scrollTrigger: { trigger: text, start: "top 80%" },
-text: { value: "" },
-duration: 1.5,
-ease: "none"
-});
-});
-
-// 3. Mission Section Fade
-gsap.from(".gs-reveal-left", {
-scrollTrigger: { trigger: ".gs-reveal-left", start: "top 80%" },
-x: -50, opacity: 0, duration: 1, ease: "power2.out"
-});
-gsap.from(".gs-reveal-right", {
-scrollTrigger: { trigger: ".gs-reveal-right", start: "top 80%" },
-x: 50, opacity: 0, duration: 1, ease: "power2.out"
-});
-
-// 4. Number Counter
-gsap.utils.toArray(".counter").forEach(counter => {
-const target = counter.getAttribute("data-target");
-gsap.to(counter, {
-scrollTrigger: { trigger: counter, start: "top 85%" },
-innerText: target,
-duration: 2,
-snap: { innerText: 1 },
-ease: "power1.inOut",
-onUpdate: function() {
-this.targets()[0].innerText = "₹" + Math.ceil(this.targets()[0].innerText).toLocaleString();
-}
-});
-});
-
-// Progress Bar
-gsap.to(".progress-animate", {
-scrollTrigger: { trigger: ".progress-animate", start: "top 85%" },
-width: "53%",
-duration: 1.5,
-ease: "power2.out"
-});
-
-// 5. Timeline Drawing & Node Pop
-gsap.to(".timeline-line", {
-scrollTrigger: { trigger: ".timeline-container", start: "top 70%", end: "bottom 70%", scrub: 1 },
-height: "100%",
-ease: "none"
-});
-
-gsap.utils.toArray(".timeline-item").forEach((item, i) => {
-gsap.to(item, {
-scrollTrigger: { trigger: item, start: "top 80%" },
-opacity: 1,
-y: 0,
-duration: 0.5
-});
-gsap.to(item.querySelector(".timeline-node"), {
-scrollTrigger: { trigger: item, start: "top 80%" },
-scale: 1,
-duration: 0.5,
-delay: 0.2,
-ease: "back.out(1.7)"
-});
-});
-
-// 6. Card Stagger
-gsap.utils.toArray(".gs-card-stagger").forEach((card, i) => {
-gsap.from(card, {
-scrollTrigger: { trigger: card, start: "top 90%" },
-y: 50,
-opacity: 0,
-duration: 0.8,
-delay: i * 0.1,
-ease: "power2.out"
-});
-});
-
-// 7. Rewards Animation (Fixed for Stacking Effect)
-gsap.utils.toArray(".stack-card").forEach((card, i) => {
-    gsap.from(card, {
-        scrollTrigger: { 
-            trigger: card, 
-            start: "top 90%" 
-        },
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out"
-    });
-});
-
-// 8. Register Form
-gsap.from(".gs-reveal-up", {
-scrollTrigger: { trigger: "#register", start: "top 75%" },
-y: 50, opacity: 0, duration: 1, ease: "power2.out"
-});
-
-// Mouse Trail Effect
-document.addEventListener('mousemove', (e) => {
-const trail = document.createElement('div');
-trail.className = 'cursor-trail';
-trail.style.left = e.clientX + 'px';
-trail.style.top = e.clientY + 'px';
-document.body.appendChild(trail);
-
-setTimeout(() => {
-trail.style.opacity = '0';
-trail.style.transform = 'scale(0)';
-}, 10);
-setTimeout(() => trail.remove(), 300);
-});
-
-/* --- ADDED: FLOATING STARS & DOLLY ZOOM LOGIC --- */
-(function addVisualEffects() {
-    // 1. Generate Floating Stars
-    const starContainer = document.getElementById('floating-stars');
-    const starCount = 60; // Number of stars
-
-    for (let i = 0; i < starCount; i++) {
-        const star = document.createElement('div');
-        star.classList.add('star-particle');
-        
-        // Random Position
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        
-        // Random Size
-        const size = Math.random() * 3 + 1 + 'px';
-        star.style.width = size;
-        star.style.height = size;
-
-        // Random Float Direction (CSS Var)
-        const moveX = (Math.random() * 200 - 100) + 'px';
-        const moveY = (Math.random() * 200 - 100) + 'px';
-        star.style.setProperty('--mx', moveX);
-        star.style.setProperty('--my', moveY);
-
-        // Random Delays
-        star.style.animationDelay = Math.random() * 5 + 's';
-        star.style.animationDuration = (Math.random() * 10 + 10) + 's'; // 10-20s duration
-        
-        starContainer.appendChild(star);
-    }
-
-    // 2. Dolly Zoom Effect (Background Scale on Scroll)
-    // We target the video layer AND the stars layer for depth
-    gsap.to(["#video-background-layer", "#floating-stars"], {
-        scale: 1.15, // Subtle zoom in
-        ease: "none",
-        scrollTrigger: {
-            trigger: "body",
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1 // Smooth scrubbing linked to scrollbar
+            bootTl.to("#boot-percent", {
+                duration: bootLogs.length * 0.8,
+                innerText: 100,
+                snap: { innerText: 1 },
+                onUpdate: function () {
+                    document.getElementById('boot-percent').innerText = Math.ceil(this.targets()[0].innerText) + "%";
+                }
+            }, 0);
         }
-    });
-})();
-</script>
+
+        // --- HERO REVEAL SEQUENCE ---
+        function startHeroSequence() {
+            const heroTl = gsap.timeline();
+
+            gsap.to("#main-body", { opacity: 1, duration: 1 });
+
+            heroTl.to(".nav-wrapper", { opacity: 1, y: 0, duration: 1, ease: "power3.out" })
+                .from(".cine-badge", { y: -20, opacity: 0, duration: 0.8 }, "-=0.5")
+                .to(".cine-title-primary", {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "power4.out"
+                }, "-=0.6")
+                .from(".cine-title-secondary", {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out"
+                }, "-=1.2")
+                .to(".cine-subtitle", { opacity: 1, duration: 1 }, "-=0.8")
+                .from(".btn-production", {
+                    y: 20,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    ease: "power2.out"
+                }, "-=0.5");
+
+            // Initial Dolly Zoom Zoom-out
+            gsap.from("#video-background-layer", {
+                scale: 1.5,
+                duration: 4,
+                ease: "power2.out"
+            });
+        }
+
+        // Initialize
+        window.onload = runBootSequence;
+
+        // --- PARTICLE SYSTEM (Mars Dust) ---
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.speedY = Math.random() * 0.5 + 0.1;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.5 ? '#ff4500' : '#c41e3a';
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < 0) this.y = height;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 150; i++) particles.push(new Particle());
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => { resize(); initParticles(); });
+        resize();
+        initParticles();
+        animateParticles();
+
+        // --- SCROLL TRANSFORMATIONS ---
+
+        // Parallax Dolly Zoom on Scroll
+        gsap.to(["#video-background-layer", "#floating-stars"], {
+            scale: 1.25,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5
+            }
+        });
+
+        // Sticky Content Parallax
+        gsap.to(".cine-content-layer", {
+            y: 200,
+            opacity: 0,
+            scrollTrigger: {
+                trigger: "#cinematic-hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // 2. Horizontal Timeline Scroll
+        const timeline = document.querySelector('.timeline-horizontal');
+        if (timeline) {
+            gsap.to(timeline, {
+                x: () => -(timeline.scrollWidth - window.innerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".timeline-section",
+                    start: "top top",
+                    end: () => `+=${timeline.scrollWidth}`,
+                    scrub: 1,
+                    pin: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true
+                }
+            });
+        }
+
+        // 3. Typewriter Effect for Section Headers
+        gsap.utils.toArray(".typing-effect").forEach(text => {
+            gsap.from(text, {
+                scrollTrigger: { trigger: text, start: "top 80%" },
+                text: { value: "" },
+                duration: 1.5,
+                ease: "none"
+            });
+        });
+
+        // 3. Mission Section Fade
+        gsap.from(".gs-reveal-left", {
+            scrollTrigger: { trigger: ".gs-reveal-left", start: "top 80%" },
+            x: -100, opacity: 0, duration: 1.2, ease: "power3.out"
+        });
+
+        // --- MISSION BRIEFING SYSTEM ---
+        const briefingData = {
+            borehole: {
+                title: "Phase_01",
+                status: "REDACTED",
+                priority: "VITAL",
+                desc: "ERROR: DATA_ENCRYPTION_ACTIVE. Mission protocols are currently locked by the Martian Council. Intelligence gathering in progress. Return after transmission window syncs.",
+                goal: "REVEALED SOON"
+            },
+            relay: {
+                title: "Phase_02",
+                status: "LOCKED",
+                priority: "CRITICAL",
+                desc: "SIGNAL INTERFERENCE DETECTED. Telemetry patterns for this phase are currently classified as LEVEL_5 RESTRICTED. Direct authorization from Team Leads required.",
+                goal: "REVEALED SOON"
+            },
+            mission_overview: {
+                title: "MISSION_OVERVIEW",
+                status: "DATA_LOADED",
+                priority: "STRATEGIC",
+                desc: "Human habitation on Mars represents one of the most complex aerospace engineering challenges of the 21st century. Establishing a safe and sustainable surface habitat requires the integration of structural mechanics, environmental control systems, thermal engineering, radiation protection, and payload optimization. M.A.R.S – Mars Atmospheric Resilient Shelter is a CAD-based Aerospace Hackathon that challenges participants to design a deployable, sustainable habitat for astronauts on Mars.",
+                goal: "Design a shelter that supports 4 Astronauts for 30 Days on Martian terrain."
+            },
+            mission_brief: {
+                title: "MISSION_BRIEFING",
+                status: "RESTRICTED",
+                priority: "CRITICAL",
+                desc: "Mars is unpredictable, harsh, and unforgiving:<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Thin CO₂ atmosphere<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Extreme temperatures<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• High radiation exposure<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Dust storms<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Reduced gravity (0.38g)<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Uneven terrain<br><br><br>" +
+                    "Your team must design a <b>Mars Atmospheric Resilient Shelter (M.A.R.S)</b> that:<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Can be transported from Earth as payload<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Can be deployed on Martian terrain<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Withstands radiation and environmental extremes<br><br>" +
+                    "&nbsp;&nbsp;&nbsp;• Is structurally stable on selected terrain",
+                goal: "4 Astronauts. 30 Days. Zero Failure Margin."
+            }
+        };
+
+        function openBriefing(type) {
+            const data = briefingData[type];
+            const modal = document.getElementById('mission-briefing');
+            const content = modal.querySelector('.briefing-content');
+
+            // Set static content (guarded — elements may be removed)
+            const _briefStatus = document.getElementById('brief-status');
+            if (_briefStatus) _briefStatus.innerText = data.status;
+            const _briefPriority = document.getElementById('brief-priority');
+            if (_briefPriority) _briefPriority.innerText = data.priority;
+
+            // Show Modal
+            modal.style.opacity = "1";
+            modal.style.pointerEvents = "auto";
+            content.style.pointerEvents = "auto";
+
+            const tl = gsap.timeline();
+
+            tl.to(".briefing-content", {
+                scale: 1,
+                opacity: 1,
+                duration: 0.6,
+                ease: "power4.out"
+            })
+                .to("#brief-title", {
+                    duration: 1,
+                    text: data.title,
+                    ease: "power2.out"
+                }, "-=0.2")
+                .to("#brief-desc", {
+                    duration: 2,
+                    text: {
+                        value: data.desc,
+                        delimiter: ""
+                    },
+                    ease: "none"
+                }, "-=0.5")
+                .to("#brief-goal", {
+                    duration: 1,
+                    text: data.goal,
+                    ease: "power2.out"
+                }, "-=0.2")
+                .from("#brief-confirm-btn", {
+                    y: 20,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }, "-=0.2");
+        }
+
+        function closeBriefing() {
+            const modal = document.getElementById('mission-briefing');
+            const content = modal.querySelector('.briefing-content');
+            gsap.to(".briefing-content", {
+                scale: 0.9,
+                opacity: 0,
+                duration: 0.4,
+                ease: "power2.in",
+                onComplete: () => {
+                    modal.style.opacity = "0";
+                    modal.style.pointerEvents = "none";
+                    content.style.pointerEvents = "none";
+                    // Reset text for next reveal
+                    document.getElementById('brief-title').innerText = "";
+                    document.getElementById('brief-desc').innerText = "";
+                    document.getElementById('brief-goal').innerText = "";
+                }
+            });
+        }
+
+        // --- CUSTOM HUB TARGET CURSOR ---
+        const cursor = document.createElement('div');
+        cursor.id = 'hud-cursor';
+        cursor.style.cssText = `
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 1px solid #00f3ff;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            mix-blend-mode: difference;
+        `;
+        const dot = document.createElement('div');
+        dot.style.cssText = 'width: 4px; height: 4px; background: #00f3ff; border-radius: 50%;';
+        cursor.appendChild(dot);
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        });
+
+        document.querySelectorAll('a, button, .tetra-scene, .cube-scene').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                gsap.to(cursor, { width: 50, height: 50, background: 'rgba(0, 243, 255, 0.1)', duration: 0.3 });
+            });
+            el.addEventListener('mouseleave', () => {
+                gsap.to(cursor, { width: 30, height: 30, background: 'transparent', duration: 0.3 });
+            });
+        });
+    </script>
 </body>
+
 </html>
-
-
