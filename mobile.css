@@ -54,11 +54,17 @@
         align-items: center;
     }
 
-    nav a[href="sponsor.html"] {
+    nav a[href="sponsor.html"],
+    nav a[href="login.html"] {
         display: block !important;
         padding: 6px 10px;
         font-size: 9px;
         border: 1px solid rgba(255, 140, 0, 0.5);
+    }
+
+    nav a[href="login.html"] {
+        border-color: rgba(0, 243, 255, 0.5);
+        color: #00f3ff;
     }
 
     nav button.nav-cta, nav a.bg-slate-900 {
@@ -350,6 +356,7 @@
         color: #ffffff !important;    
         opacity: 1 !important;
     }
+
     /* =========================================
        9. PREVIOUS EVENTS TITLE FIX (ONE LINE)
        ========================================= */
@@ -359,5 +366,70 @@
         white-space: nowrap !important; /* Forces it to NEVER break into two lines */
         word-wrap: normal !important;
         padding: 0 !important;
+    }
+
+    /* =========================================
+       10. FACULTY & STUDENT ORGANIZER IMAGE FIX
+       ========================================= */
+    /* Targets the primary profile pictures inside the Team and Speaker sections */
+    #team .glass-panel img:first-of-type,
+    #speakers .glass-panel img:first-of-type {
+        aspect-ratio: 1 / 1 !important;     /* Forces a perfect square ratio */
+        object-fit: cover !important;       /* Prevents stretching/squishing */
+        object-position: top center !important; /* Keeps faces in focus */
+        border-radius: 50% !important;      /* Enforces the circular shape */
+        width: 120px !important;            /* Responsive standardized width */
+        height: 120px !important;           /* Responsive standardized height */
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    /* =========================================
+       11. NEW PAGES: LOGIN, DASHBOARD, SUBMIT
+       ========================================= */
+    
+    /* Login Page */
+    .glass-panel.rounded-\[40px\] {
+        border-radius: 24px !important;
+        padding: 30px 20px !important;
+    }
+
+    /* Dashboard & Submit */
+    #team-name {
+        font-size: 2rem !important;
+        text-align: center;
+    }
+
+    .grid.md\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    #submission-status .flex-col.md\:flex-row {
+        gap: 20px;
+    }
+
+    #submission-status .w-16.h-16 {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    #submission-status .material-icons.text-3xl {
+        font-size: 1.5rem !important;
+    }
+
+    #action-btn-container, 
+    #action-btn-container a {
+        width: 100% !important;
+        display: block;
+        text-align: center;
+    }
+
+    /* Submit Upload Box */
+    .border-dashed.p-12 {
+        padding: 30px 15px !important;
+    }
+
+    #file-label .text-4xl {
+        font-size: 2rem !important;
     }
 }
