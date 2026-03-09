@@ -1,0 +1,314 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEROCREST 2026 | Login</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!-- MOBILE RESPONSIVENESS CSS -->
+    <link
+      rel="stylesheet"
+      href="mobile.css"
+      media="screen and (max-width: 768px)"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#c41e3a",
+              "accent-mars": "#ff4500",
+              "accent-gold": "#ff8c00",
+              "accent-cyan": "#00f3ff",
+              "background-dark": "#0a0200",
+            },
+            fontFamily: {
+              orbitron: ["Orbitron", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+              mono: ["Share Tech Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0a0200;
+        color: #ffffff;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #video-background-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -50;
+        overflow: hidden;
+      }
+      #bg-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        opacity: 0.4;
+      }
+      .cinematic-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 5, 0, 0.85) 0%,
+          rgba(26, 5, 0, 0.4) 40%,
+          rgba(26, 5, 0, 1) 100%
+        );
+        z-index: -40;
+        pointer-events: none;
+      }
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 50%
+        );
+        background-size: 100% 4px;
+        z-index: -30;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .glass-panel {
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 69, 0, 0.2);
+        background: rgba(45, 10, 5, 0.4);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+      .glow-text {
+        text-shadow:
+          0 0 20px rgba(196, 30, 58, 0.8),
+          0 0 40px rgba(255, 69, 0, 0.4);
+      }
+      .cursor-trail {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #ff4500;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow:
+          0 0 10px #ff4500,
+          0 0 20px #c41e3a;
+        transition: opacity 0.3s;
+      }
+      @media (pointer: fine) {
+        body,
+        a,
+        button {
+          cursor:
+            url("assets/astro-cursor2.png") 2 2,
+            auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="selection:bg-primary selection:text-white">
+    <div id="video-background-layer">
+      <video id="bg-video" autoplay muted loop playsinline>
+        <source src="assets/one.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="cinematic-overlay"></div>
+    <div class="scanlines"></div>
+    <canvas
+      id="starfield"
+      class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"
+    ></canvas>
+
+    <div
+      class="glass-panel p-10 rounded-[40px] max-w-md w-full text-center relative z-10 border-t-8 border-primary"
+    >
+      <div class="mb-8">
+        <div
+          class="h-24 w-24 rounded-full bg-center bg-cover mx-auto mb-4 shadow-[0_0_30px_rgba(196,30,58,0.6)] border-2 border-primary/30"
+          style="background-image: url(&quot;assets/logooo.png&quot;)"
+        ></div>
+        <h1
+          class="text-4xl font-black font-orbitron italic tracking-tighter glow-text"
+        >
+          AEROCREST <span class="text-primary">2026</span>
+        </h1>
+        <p
+          class="text-accent-gold font-bold tracking-[0.3em] text-[10px] uppercase mt-2"
+        >
+          Mission Access Required
+        </p>
+      </div>
+
+      <button
+        id="googleLogin"
+        class="w-full bg-primary hover:bg-accent-mars text-white py-4 rounded-full font-orbitron font-bold text-sm tracking-widest transition-all transform hover:scale-105 shadow-lg border border-white/10 flex items-center justify-center gap-3"
+      >
+        <img
+          src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+          class="w-6 h-6 bg-white rounded-full p-1"
+          alt="Google"
+        />
+        LOGIN WITH GOOGLE
+      </button>
+
+      <p
+        class="text-gray-500 text-[9px] font-mono tracking-widest mt-8 uppercase"
+      >
+        Secure Terminal Connection Active
+      </p>
+
+      <div
+        id="status"
+        class="mt-4 text-xs font-mono text-primary hidden animate-pulse"
+      >
+        Initializing Neural Link...
+      </div>
+    </div>
+
+    <script>
+      const _SUPABASE_URL = "https://txvxwcjmiiihyuvudskf.supabase.co";
+      const _SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4dnh3Y2ptaWlpaHl1dnVkc2tmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NDcxMjQsImV4cCI6MjA4NzMyMzEyNH0.4W2HvAzdcjudwiYgNiiNDn78iXOOEsrrQ3F86Xh6oEw";
+      const supabaseClient = supabase.createClient(
+        _SUPABASE_URL,
+        _SUPABASE_KEY,
+      );
+
+      const loginBtn = document.getElementById("googleLogin");
+      const statusDiv = document.getElementById("status");
+
+      // Listen for auth state changes (handles redirect from OAuth)
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        console.log(
+          "Auth event:",
+          event,
+          session ? "Session active" : "No session",
+        );
+        if (session) {
+          // Mission accomplished, move to dashboard
+          window.location.href = "dashboard.html";
+        }
+      });
+
+      loginBtn.addEventListener("click", async () => {
+        statusDiv.classList.remove("hidden");
+        loginBtn.disabled = true;
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+              redirectTo: window.location.origin + "/dashboard.html",
+            },
+          });
+          if (error) throw error;
+        } catch (error) {
+          console.error("Auth error:", error);
+          alert("AUTH FAILED: " + error.message);
+          statusDiv.classList.add("hidden");
+          loginBtn.disabled = false;
+        }
+      });
+
+      // Particle System
+      const canvas = document.getElementById("starfield");
+      const ctx = canvas.getContext("2d");
+      let width,
+        height,
+        particles = [];
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.size = Math.random() * 2;
+          this.speedY = Math.random() * 0.5 + 0.1;
+          this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+          this.y -= this.speedY;
+          if (this.y < 0) this.y = height;
+        }
+        draw() {
+          ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      function initParticles() {
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+      }
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      initParticles();
+      animateParticles();
+
+      // Mouse Trail
+      document.addEventListener("mousemove", (e) => {
+        const trail = document.createElement("div");
+        trail.className = "cursor-trail";
+        trail.style.left = e.clientX + "px";
+        trail.style.top = e.clientY + "px";
+        document.body.appendChild(trail);
+        setTimeout(() => {
+          trail.style.opacity = "0";
+          trail.style.transform = "scale(0)";
+        }, 10);
+        setTimeout(() => trail.remove(), 300);
+      });
+
+      checkSession();
+    </script>
+  </body>
+</html>

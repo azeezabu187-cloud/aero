@@ -1,0 +1,506 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEROCREST 2026 | Dashboard</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="mobile.css"
+      media="screen and (max-width: 768px)"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#c41e3a",
+              "accent-mars": "#ff4500",
+              "accent-gold": "#ff8c00",
+              "accent-cyan": "#00f3ff",
+              "background-dark": "#0a0200",
+            },
+            fontFamily: {
+              orbitron: ["Orbitron", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+              mono: ["Share Tech Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0a0200;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+      }
+      #video-background-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -50;
+        overflow: hidden;
+      }
+      #bg-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        opacity: 0.4;
+      }
+      .cinematic-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 5, 0, 0.85) 0%,
+          rgba(26, 5, 0, 0.4) 40%,
+          rgba(26, 5, 0, 1) 100%
+        );
+        z-index: -40;
+        pointer-events: none;
+      }
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 50%
+        );
+        background-size: 100% 4px;
+        z-index: -30;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .glass-panel {
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 69, 0, 0.2);
+        background: rgba(45, 10, 5, 0.4);
+      }
+      .glow-text {
+        text-shadow:
+          0 0 20px rgba(196, 30, 58, 0.8),
+          0 0 40px rgba(255, 69, 0, 0.4);
+      }
+      .cursor-trail {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #ff4500;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow:
+          0 0 10px #ff4500,
+          0 0 20px #c41e3a;
+        transition: opacity 0.3s;
+      }
+      @media (pointer: fine) {
+        body,
+        a,
+        button {
+          cursor:
+            url("assets/astro-cursor2.png") 2 2,
+            auto;
+        }
+      }
+      .nav-link:hover .indicator {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-primary selection:text-white">
+    <div id="video-background-layer">
+      <video id="bg-video" autoplay muted loop playsinline>
+        <source src="assets/one.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="cinematic-overlay"></div>
+    <div class="scanlines"></div>
+    <canvas
+      id="starfield"
+      class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"
+    ></canvas>
+
+    <!-- NAVBAR -->
+    <nav
+      class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 h-20 flex items-center"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 w-full flex items-center justify-between"
+      >
+        <a href="index.html" class="flex items-center space-x-4"
+          ><div
+            class="h-16 w-16 rounded-full bg-center bg-cover border border-primary/30"
+            style="background-image: url(&quot;assets/logooo.png&quot;)"
+          ></div
+        ></a>
+        <div
+          class="hidden md:flex space-x-8 items-center font-orbitron text-[10px] font-bold tracking-[0.2em] uppercase"
+        >
+          <a class="nav-link relative py-2" href="index.html#mission"
+            >Mission<span
+              class="indicator absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300"
+            ></span
+          ></a>
+          <a class="nav-link relative py-2" href="index.html#timeline"
+            >Timeline<span
+              class="indicator absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300"
+            ></span
+          ></a>
+          <a class="nav-link relative py-2" href="index.html#challenges"
+            >Challenges<span
+              class="indicator absolute bottom-0 left-0 w-0 h-0.5 bg-accent-mars transition-all duration-300"
+            ></span
+          ></a>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            onclick="logout()"
+            class="bg-primary hover:bg-accent-mars text-white px-6 py-2 rounded-full font-bold transition-all border border-white/10 text-xs"
+          >
+            LOGOUT
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main
+      class="pt-32 pb-20 px-6 min-h-screen flex items-center justify-center"
+    >
+      <div
+        id="loading"
+        class="text-center font-orbitron animate-pulse text-accent-cyan tracking-widest uppercase"
+      >
+        Initializing Mission Data...
+      </div>
+
+      <div id="dashboard-content" class="hidden max-w-4xl w-full">
+        <div
+          class="glass-panel p-10 rounded-[40px] border-t-8 border-primary relative overflow-hidden"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6"
+          >
+            <div>
+              <h1
+                id="team-name"
+                class="text-4xl md:text-5xl font-black font-orbitron italic uppercase tracking-tighter glow-text mb-2"
+              >
+                LOADING...
+              </h1>
+              <p
+                class="text-accent-gold font-bold tracking-[0.3em] text-[10px] uppercase"
+              >
+                Official Squad Dashboard
+              </p>
+            </div>
+            <div
+              class="bg-accent-cyan/10 border border-accent-cyan/30 px-6 py-3 rounded-full"
+            >
+              <span
+                class="text-accent-cyan font-bold font-orbitron text-[10px] tracking-widest flex items-center gap-2"
+              >
+                <span class="material-icons text-sm">verified</span> STATUS:
+                VERIFIED
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="grid md:grid-cols-2 gap-8 mb-10 text-sm font-mono tracking-widest"
+          >
+            <div class="bg-black/30 border border-white/5 p-6 rounded-2xl">
+              <p class="text-gray-500 mb-2 uppercase text-[10px]">
+                College Node
+              </p>
+              <p id="college-name" class="text-white font-bold">---</p>
+            </div>
+            <div class="bg-black/30 border border-white/5 p-6 rounded-2xl">
+              <p class="text-gray-500 mb-2 uppercase text-[10px]">
+                Submission Deadline
+              </p>
+              <p id="deadline" class="text-white font-bold">---</p>
+            </div>
+          </div>
+
+          <div
+            id="submission-status"
+            class="bg-black/40 border border-white/10 p-8 rounded-[30px] relative overflow-hidden"
+          >
+            <div
+              class="flex flex-col md:flex-row justify-between items-center gap-6"
+            >
+              <div class="flex items-center gap-6 text-center md:text-left">
+                <div
+                  id="status-icon"
+                  class="w-16 h-16 rounded-full flex items-center justify-center border-2"
+                >
+                  <span class="material-icons text-3xl">hourglass_empty</span>
+                </div>
+                <div>
+                  <h3
+                    id="ppt-status-text"
+                    class="font-orbitron font-bold text-lg mb-1 uppercase"
+                  >
+                    Checking Status...
+                  </h3>
+                  <p id="uploaded-at" class="text-xs text-gray-500">
+                    Querying central archives...
+                  </p>
+                </div>
+              </div>
+              <div id="action-btn-container">
+                <!-- Action button injected here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="unregistered"
+        class="hidden max-w-md w-full glass-panel p-12 rounded-[40px] border-t-8 border-accent-gold text-center"
+      >
+        <span class="material-icons text-6xl text-accent-gold mb-6"
+          >warning</span
+        >
+        <h2 class="text-3xl font-black font-orbitron mb-4 uppercase italic">
+          ACCESS_DENIED
+        </h2>
+        <p class="text-gray-400 mb-8 font-mono text-sm tracking-widest">
+          The email <span id="checked-email" class="text-white">---</span> is
+          not found in our registries. Please ensure you are using the same
+          Google account you used for registration.
+        </p>
+        <a
+          href="index.html#register"
+          class="block w-full bg-accent-gold hover:bg-orange-500 text-black py-4 rounded-full font-orbitron font-black text-lg transition-all shadow-lg uppercase tracking-widest"
+          >ENLIST NOW</a
+        >
+        <button
+          onclick="logout()"
+          class="mt-6 text-gray-500 text-[10px] font-bold tracking-widest hover:text-white transition-colors"
+        >
+          ABORT SESSION
+        </button>
+      </div>
+    </main>
+
+    <footer
+      class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center font-mono text-[9px] tracking-[0.4em] text-gray-500 uppercase"
+    >
+      BSA CRESCENT AEROSPACE © 2026 // Mission Control Active.
+    </footer>
+
+    <script>
+      const _SUPABASE_URL = "https://txvxwcjmiiihyuvudskf.supabase.co";
+      const _SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4dnh3Y2ptaWlpaHl1dnVkc2tmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NDcxMjQsImV4cCI6MjA4NzMyMzEyNH0.4W2HvAzdcjudwiYgNiiNDn78iXOOEsrrQ3F86Xh6oEw";
+      const supabaseClient = supabase.createClient(
+        _SUPABASE_URL,
+        _SUPABASE_KEY,
+      );
+
+      async function logout() {
+        await supabaseClient.auth.signOut();
+        window.location.href = "login.html";
+      }
+
+      async function initDashboard() {
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const email = session.user.email;
+          console.log("Logged in as:", email);
+
+          // Fetch Registration
+          const { data: regData, error: regError } = await supabaseClient
+            .from("registrations")
+            .select("id, team_name, college_name")
+            .eq("email", email)
+            .single();
+
+          if (regError || !regData) {
+            console.error("Registration check failed:", regError || "No data");
+            document.getElementById("checked-email").innerText = email;
+            document.getElementById("loading").classList.add("hidden");
+            document.getElementById("unregistered").classList.remove("hidden");
+            return;
+          }
+
+          document.getElementById("team-name").innerText = regData.team_name;
+          document.getElementById("college-name").innerText =
+            regData.college_name;
+
+          // Fetch Deadline
+          const { data: setEntries } = await supabaseClient
+            .from("settings")
+            .select("value")
+            .eq("key", "submission_deadline")
+            .single();
+
+          if (setEntries) {
+            const date = new Date(setEntries.value);
+            document.getElementById("deadline").innerText = date.toLocaleString(
+              "en-US",
+              {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              },
+            );
+          }
+
+          // Fetch PPT Status
+          const { data: pptData } = await supabaseClient
+            .from("ppt_submissions")
+            .select("ppt_link, uploaded_at")
+            .eq("team_email", email)
+            .single();
+
+          const statusIcon = document.getElementById("status-icon");
+          const statusText = document.getElementById("ppt-status-text");
+          const statusTime = document.getElementById("uploaded-at");
+          const actionContainer = document.getElementById(
+            "action-btn-container",
+          );
+
+          if (pptData) {
+            statusIcon.classList.add(
+              "bg-green-500/10",
+              "border-green-500",
+              "text-green-500",
+            );
+            statusIcon.innerHTML =
+              '<span class="material-icons text-3xl">check_circle</span>';
+            statusText.innerText = "MISSION DATA RECEIVED";
+            statusTime.innerText =
+              "Received: " + new Date(pptData.uploaded_at).toLocaleString();
+            actionContainer.innerHTML = `<a href="${pptData.ppt_link}" target="_blank" class="bg-accent-cyan hover:bg-cyan-500 text-black px-6 py-3 rounded-full font-bold text-xs font-orbitron shadow-lg flex items-center gap-2 tracking-widest"><span class="material-icons text-sm">visibility</span> VIEW SUBMISSION</a>`;
+          } else {
+            statusIcon.classList.add(
+              "bg-accent-gold/10",
+              "border-accent-gold",
+              "text-accent-gold",
+            );
+            statusIcon.innerHTML =
+              '<span class="material-icons text-3xl">priority_high</span>';
+            statusText.innerText = "PPT STATUS: PENDING";
+            statusTime.innerText = "Waiting for orbital uplink...";
+            actionContainer.innerHTML = `<a href="submit.html" class="bg-primary hover:bg-accent-mars text-white px-8 py-3 rounded-full font-bold text-xs font-orbitron shadow-lg flex items-center gap-2 tracking-widest"><span class="material-icons text-sm">cloud_upload</span> UPLOAD PPT</a>`;
+          }
+
+          document.getElementById("loading").classList.add("hidden");
+          document
+            .getElementById("dashboard-content")
+            .classList.remove("hidden");
+        } catch (e) {
+          console.error(e);
+          alert("System Sync Error: " + e.message);
+        }
+      }
+
+      // Visuals
+      const canvas = document.getElementById("starfield");
+      const ctx = canvas.getContext("2d");
+      let width,
+        height,
+        particles = [];
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.size = Math.random() * 2;
+          this.speedY = Math.random() * 0.5 + 0.1;
+          this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+          this.y -= this.speedY;
+          if (this.y < 0) this.y = height;
+        }
+        draw() {
+          ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      function initParticles() {
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+      }
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      initParticles();
+      animateParticles();
+      document.addEventListener("mousemove", (e) => {
+        const trail = document.createElement("div");
+        trail.className = "cursor-trail";
+        trail.style.left = e.clientX + "px";
+        trail.style.top = e.clientY + "px";
+        document.body.appendChild(trail);
+        setTimeout(() => {
+          trail.style.opacity = "0";
+          trail.style.transform = "scale(0)";
+        }, 10);
+        setTimeout(() => trail.remove(), 300);
+      });
+
+      initDashboard();
+    </script>
+  </body>
+</html>

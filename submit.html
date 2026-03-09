@@ -1,0 +1,580 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEROCREST 2026 | Submit Mission Data</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="mobile.css"
+      media="screen and (max-width: 768px)"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#c41e3a",
+              "accent-mars": "#ff4500",
+              "accent-gold": "#ff8c00",
+              "accent-cyan": "#00f3ff",
+              "background-dark": "#0a0200",
+            },
+            fontFamily: {
+              orbitron: ["Orbitron", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+              mono: ["Share Tech Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0a0200;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+      }
+      #video-background-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -50;
+        overflow: hidden;
+      }
+      #bg-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        opacity: 0.4;
+      }
+      .cinematic-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 5, 0, 0.85) 0%,
+          rgba(26, 5, 0, 0.4) 40%,
+          rgba(26, 5, 0, 1) 100%
+        );
+        z-index: -40;
+        pointer-events: none;
+      }
+      .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 50%
+        );
+        background-size: 100% 4px;
+        z-index: -30;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .glass-panel {
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 69, 0, 0.2);
+        background: rgba(45, 10, 5, 0.4);
+      }
+      .glow-text {
+        text-shadow:
+          0 0 20px rgba(196, 30, 58, 0.8),
+          0 0 40px rgba(255, 69, 0, 0.4);
+      }
+      .cursor-trail {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #ff4500;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow:
+          0 0 10px #ff4500,
+          0 0 20px #c41e3a;
+        transition: opacity 0.3s;
+      }
+      @media (pointer: fine) {
+        body,
+        a,
+        button {
+          cursor:
+            url("assets/astro-cursor2.png") 2 2,
+            auto;
+        }
+      }
+
+      .progress-bar-inner {
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-primary selection:text-white">
+    <div id="video-background-layer">
+      <video id="bg-video" autoplay muted loop playsinline>
+        <source src="assets/one.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="cinematic-overlay"></div>
+    <div class="scanlines"></div>
+    <canvas
+      id="starfield"
+      class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-20] opacity-50"
+    ></canvas>
+
+    <!-- NAVBAR -->
+    <nav
+      class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-primary/30 h-20 flex items-center"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 w-full flex items-center justify-between"
+      >
+        <a href="dashboard.html" class="flex items-center space-x-4"
+          ><div
+            class="h-16 w-16 rounded-full bg-center bg-cover border border-primary/30"
+            style="background-image: url(&quot;assets/logooo.png&quot;)"
+          ></div
+        ></a>
+        <div class="flex items-center gap-4">
+          <a
+            href="dashboard.html"
+            class="text-white hover:text-accent-gold transition-colors font-orbitron font-bold text-[10px] tracking-widest flex items-center gap-2"
+            ><span class="material-icons text-sm">dashboard</span> DASHBOARD</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main
+      class="pt-32 pb-20 px-6 min-h-screen flex items-center justify-center"
+    >
+      <div
+        id="loading"
+        class="text-center font-orbitron animate-pulse text-accent-cyan tracking-widest uppercase"
+      >
+        Initializing Uplink...
+      </div>
+
+      <div id="submit-content" class="hidden max-w-2xl w-full">
+        <div
+          class="glass-panel p-10 rounded-[40px] border-t-8 border-primary relative overflow-hidden"
+        >
+          <div class="text-center mb-10">
+            <h1
+              class="text-4xl font-black font-orbitron italic uppercase tracking-tighter glow-text mb-2"
+            >
+              SUBMIT_MISSION_DATA
+            </h1>
+            <p
+              class="text-accent-gold font-bold tracking-[0.3em] text-[10px] uppercase"
+            >
+              Phase 01: Technical Briefing
+            </p>
+          </div>
+
+          <form
+            id="submissionForm"
+            class="space-y-8"
+            onsubmit="
+              event.preventDefault();
+              handleUpload();
+            "
+          >
+            <div class="space-y-4">
+              <label
+                class="block text-xs font-mono font-bold tracking-widest text-primary uppercase"
+                >EVIDENCE UPLOAD (.PPT / .PPTX)</label
+              >
+              <div
+                id="dropzone"
+                class="relative group border-2 border-dashed border-white/10 hover:border-primary/50 transition-all rounded-[30px] p-12 text-center cursor-pointer bg-black/20"
+              >
+                <input
+                  type="file"
+                  id="ppt-file"
+                  accept=".ppt,.pptx"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onchange="updateFileInfo(this)"
+                />
+                <div id="file-placeholder">
+                  <span
+                    class="material-icons text-5xl text-gray-600 group-hover:text-primary transition-colors mb-4"
+                    >cloud_upload</span
+                  >
+                  <p
+                    class="text-sm text-gray-400 group-hover:text-white transition-colors tracking-widest font-orbitron uppercase"
+                  >
+                    Drag files here or click to browse
+                  </p>
+                  <p class="text-[10px] text-gray-500 mt-2 font-mono">
+                    MAX FILE SIZE: 20MB
+                  </p>
+                </div>
+                <div id="file-info" class="hidden">
+                  <span class="material-icons text-5xl text-accent-cyan mb-4"
+                    >description</span
+                  >
+                  <p
+                    id="file-name"
+                    class="text-white font-bold tracking-widest text-xs uppercase mb-1 truncate px-4"
+                  >
+                    file_name.pptx
+                  </p>
+                  <p
+                    id="file-size"
+                    class="text-gray-500 text-[10px] uppercase font-mono tracking-widest"
+                  >
+                    0.0 MB
+                  </p>
+                  <button
+                    type="button"
+                    onclick="clearFile(event)"
+                    class="mt-4 text-primary font-bold text-[9px] uppercase tracking-widest hover:text-white transition-colors flex items-center gap-1 mx-auto"
+                  >
+                    <span class="material-icons text-sm">close</span> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progress-container" class="hidden space-y-2">
+              <div
+                class="flex justify-between items-center text-[10px] font-mono tracking-[0.2em] uppercase"
+              >
+                <span class="text-accent-cyan">Transmitting to Orbiter...</span>
+                <span id="progress-percent" class="text-white">0%</span>
+              </div>
+              <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div
+                  id="progress-bar"
+                  class="progress-bar-inner h-full w-0 bg-accent-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)]"
+                ></div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="submit-btn"
+              class="w-full bg-primary hover:bg-accent-mars text-white py-5 rounded-full font-orbitron font-black text-xl transition-all shadow-xl uppercase tracking-tighter disabled:opacity-50 disabled:cursor-not-allowed group"
+            >
+              <span
+                class="relative z-10 flex items-center justify-center gap-3"
+              >
+                INITIALIZE UPLINK
+                <span
+                  class="material-icons group-hover:translate-x-1 transition-transform"
+                  >send</span
+                >
+              </span>
+            </button>
+          </form>
+
+          <footer class="mt-10 pt-6 border-t border-white/5 text-center">
+            <p
+              class="text-gray-600 font-mono text-[9px] tracking-[0.3em] uppercase"
+            >
+              Secure Channel: AES-256 Enabled
+            </p>
+          </footer>
+        </div>
+      </div>
+
+      <div
+        id="locked"
+        class="hidden max-w-md w-full glass-panel p-12 rounded-[40px] border-t-8 border-primary text-center"
+      >
+        <span class="material-icons text-7xl text-primary mb-6">lock</span>
+        <h2
+          id="lock-title"
+          class="text-3xl font-black font-orbitron mb-4 uppercase italic"
+        >
+          SUBMISSIONS CLOSED
+        </h2>
+        <p
+          id="lock-msg"
+          class="text-gray-400 mb-8 font-mono text-sm tracking-widest"
+        >
+          Transmission window has elapsed. Late arrivals are not authorized.
+        </p>
+        <a
+          href="dashboard.html"
+          class="block w-full bg-white/10 hover:bg-white/20 border border-white/10 py-4 rounded-full font-orbitron font-bold text-sm transition-all text-white tracking-widest uppercase italic"
+          >Return to Base</a
+        >
+      </div>
+    </main>
+
+    <footer
+      class="py-12 px-6 border-t border-white/5 bg-black/80 backdrop-blur-lg text-center font-mono text-[9px] tracking-[0.4em] text-gray-500 uppercase"
+    >
+      BSA CRESCENT AEROSPACE © 2026 // Mission Control Active.
+    </footer>
+
+    <script>
+      const _SUPABASE_URL = "https://txvxwcjmiiihyuvudskf.supabase.co";
+      const _SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4dnh3Y2ptaWlpaHl1dnVkc2tmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NDcxMjQsImV4cCI6MjA4NzMyMzEyNH0.4W2HvAzdcjudwiYgNiiNDn78iXOOEsrrQ3F86Xh6oEw";
+      const supabaseClient = supabase.createClient(
+        _SUPABASE_URL,
+        _SUPABASE_KEY,
+      );
+
+      let currentEmail = null;
+
+      function updateFileInfo(input) {
+        const info = document.getElementById("file-info");
+        const placeholder = document.getElementById("file-placeholder");
+        const nameLabel = document.getElementById("file-name");
+        const sizeLabel = document.getElementById("file-size");
+
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+          if (file.size > 20 * 1024 * 1024) {
+            alert("FILE SIZE EXCEEDS 20MB LIMIT.");
+            input.value = "";
+            return;
+          }
+          nameLabel.innerText = file.name;
+          sizeLabel.innerText = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+          info.classList.remove("hidden");
+          placeholder.classList.add("hidden");
+        }
+      }
+
+      function clearFile(e) {
+        e.stopPropagation();
+        const input = document.getElementById("ppt-file");
+        input.value = "";
+        document.getElementById("file-info").classList.add("hidden");
+        document.getElementById("file-placeholder").classList.remove("hidden");
+      }
+
+      async function initUpload() {
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+          currentEmail = session.user.email;
+
+          // 1. Check Deadline
+          const { data: deadlineData } = await supabaseClient
+            .from("settings")
+            .select("value")
+            .eq("key", "submission_deadline")
+            .single();
+
+          if (deadlineData) {
+            const now = new Date();
+            const dl = new Date(deadlineData.value);
+            if (now > dl) {
+              showLock(
+                "SUBMISSIONS CLOSED",
+                "The tactical window for file transmission has passed.",
+              );
+              return;
+            }
+          }
+
+          // 2. Check if already submitted
+          const { data: existing } = await supabaseClient
+            .from("ppt_submissions")
+            .select("id")
+            .eq("team_email", currentEmail)
+            .single();
+
+          if (existing) {
+            showLock(
+              "MISSION LOGGED",
+              "Mission data has already been received. Multiple entries are disabled.",
+            );
+            return;
+          }
+
+          document.getElementById("loading").classList.add("hidden");
+          document.getElementById("submit-content").classList.remove("hidden");
+        } catch (e) {
+          console.error(e);
+          alert("System Sync Error: " + e.message);
+        }
+      }
+
+      function showLock(title, msg) {
+        document.getElementById("loading").classList.add("hidden");
+        document.getElementById("locked").classList.remove("hidden");
+        document.getElementById("lock-title").innerText = title;
+        document.getElementById("lock-msg").innerText = msg;
+      }
+
+      async function handleUpload() {
+        const fileInput = document.getElementById("ppt-file");
+        const file = fileInput.files[0];
+        if (!file) {
+          alert("SELECT FILE TO PROCEED.");
+          return;
+        }
+
+        const btn = document.getElementById("submit-btn");
+        const progressCont = document.getElementById("progress-container");
+        const progressBar = document.getElementById("progress-bar");
+        const progressPct = document.getElementById("progress-percent");
+
+        btn.disabled = true;
+        progressCont.classList.remove("hidden");
+
+        try {
+          // Fake progress bar since fetch upload doesn't have easy progress in standard supabase js without heavy custom code
+          // We'll increment it manually while the call happens
+          let prog = 0;
+          const interval = setInterval(() => {
+            if (prog < 90) {
+              prog += Math.random() * 10;
+              progressBar.style.width = Math.min(prog, 90) + "%";
+              progressPct.innerText = Math.round(Math.min(prog, 90)) + "%";
+            }
+          }, 500);
+
+          const fileExt = file.name.split(".").pop();
+          const fileName = `team_${currentEmail.replace(/[^a-zA-Z0-9]/g, "_")}_${Date.now()}.${fileExt}`;
+          const filePath = `entries/${fileName}`;
+
+          const { error: uploadError } = await supabaseClient.storage
+            .from("ppt-submissions")
+            .upload(filePath, file);
+
+          if (uploadError) throw uploadError;
+
+          const { data: urlData } = supabaseClient.storage
+            .from("ppt-submissions")
+            .getPublicUrl(filePath);
+
+          const { error: insertError } = await supabaseClient
+            .from("ppt_submissions")
+            .insert([
+              {
+                team_email: currentEmail,
+                ppt_link: urlData.publicUrl,
+                uploaded_at: new Date(),
+              },
+            ]);
+
+          if (insertError) throw insertError;
+
+          clearInterval(interval);
+          progressBar.style.width = "100%";
+          progressPct.innerText = "100%";
+
+          btn.innerHTML = "MISSION DATA RECEIVED ✅";
+          btn.classList.replace("bg-primary", "bg-green-600");
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 2000);
+        } catch (e) {
+          console.error(e);
+          alert("UPLINK FAILED: " + e.message);
+          btn.disabled = false;
+          progressCont.classList.add("hidden");
+        }
+      }
+
+      // Visuals
+      const canvas = document.getElementById("starfield");
+      const ctx = canvas.getContext("2d");
+      let width,
+        height,
+        particles = [];
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.size = Math.random() * 2;
+          this.speedY = Math.random() * 0.5 + 0.1;
+          this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+          this.y -= this.speedY;
+          if (this.y < 0) this.y = height;
+        }
+        draw() {
+          ctx.fillStyle = `rgba(255, 69, 0, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      function initParticles() {
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+      }
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      initParticles();
+      animateParticles();
+      document.addEventListener("mousemove", (e) => {
+        const trail = document.createElement("div");
+        trail.className = "cursor-trail";
+        trail.style.left = e.clientX + "px";
+        trail.style.top = e.clientY + "px";
+        document.body.appendChild(trail);
+        setTimeout(() => {
+          trail.style.opacity = "0";
+          trail.style.transform = "scale(0)";
+        }, 10);
+        setTimeout(() => trail.remove(), 300);
+      });
+
+      initUpload();
+    </script>
+  </body>
+</html>
