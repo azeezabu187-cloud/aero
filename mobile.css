@@ -24,60 +24,96 @@
     }
 
     /* =========================================
-       2. NAVBAR
+       2. NAVBAR (Perfectly Tailored Mobile Layout)
        ========================================= */
     nav.nav-wrapper {
         height: auto !important;
-        padding: 10px 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(10px);
+        padding: 12px 0 15px 0 !important;
+        background: rgba(10, 2, 0, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        border-bottom: 1px solid rgba(196, 30, 58, 0.3) !important;
     }
 
     nav .max-w-7xl {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 15px;
+        display: flex !important;
+        flex-direction: column !important; /* Stack rows */
+        align-items: center !important;
+        padding: 0 15px !important;
+        gap: 15px !important;
     }
 
-    /* Left Logo */
+    /* Top Row: Logos */
+    .nav-wrapper .flex.items-center.justify-between {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    /* Mars Logo (Left) */
     nav a[aria-label="AEROCREST 2026"] {
-        transform: scale(0.8);
-        margin-left: -10px;
+        transform: scale(0.85) !important;
+        margin-left: -5px !important;
+        flex-shrink: 0 !important;
     }
 
-    /* Right Group */
-    nav .flex.items-center.gap-4 {
-        gap: 8px;
-        display: flex;
-        align-items: center;
-    }
-
-    nav a[href="sponsor.html"],
-    nav a[href="login.html"] {
+    /* Crescent Logo (Right) */
+    nav a[href="https://crescent.education/"] {
         display: block !important;
-        padding: 6px 10px;
-        font-size: 9px;
-        border: 1px solid rgba(255, 140, 0, 0.5);
-    }
-
-    nav a[href="login.html"] {
-        border-color: rgba(0, 243, 255, 0.5);
-        color: #00f3ff;
-    }
-
-    nav button.nav-cta, nav a.bg-slate-900 {
-        padding: 6px 12px;
-        font-size: 10px;
+        flex-shrink: 0 !important;
     }
 
     nav img[alt="BS Crescent Institute"] {
-        height: 28px;
-        width: auto;
+        height: 32px !important;
+        width: auto !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        padding: 3px !important;
+    }
+
+    /* Bottom Row: Buttons Group */
+    nav .flex.items-center.gap-4 {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        margin-top: 5px !important;
+    }
+
+    /* Button Styling */
+    nav a[href="sponsor.html"],
+    nav a[href="login.html"],
+    nav button.nav-cta {
+        display: block !important;
+        padding: 8px 14px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
+        border-radius: 99px !important;
+        white-space: nowrap !important;
+    }
+
+    nav a[href="sponsor.html"] {
+        border: 1px solid rgba(255, 140, 0, 0.6) !important;
+        color: #ff8c00 !important;
+        background: rgba(255, 140, 0, 0.05) !important;
+    }
+
+    nav a[href="login.html"] {
+        border: 1px solid rgba(0, 243, 255, 0.6) !important;
+        color: #00f3ff !important;
+        background: rgba(0, 243, 255, 0.05) !important;
+    }
+
+    nav button.nav-cta {
+        background: #c41e3a !important;
+        color: #fff !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 0 15px rgba(196, 30, 58, 0.4) !important;
     }
 
     nav .hidden.md\:flex { display: none !important; }
+
 
     /* =========================================
        3. HERO & 3D
